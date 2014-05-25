@@ -1,15 +1,15 @@
 
-// npm install express
-// npm install body-parser
-// npm install simplecrawler
+// run "npm install" to install all dependencies
+// see config.js for configuration
 
-var express    = require('express')
-var bodyParser = require('body-parser')
-var crawler = require("simplecrawler");
+var express    = require('express');
+var bodyParser = require('body-parser');
+var crawler = require("./crawler.js");
+var config = require("./config.js");
 
-var app = express()
+var app = express();
 
-app.use(bodyParser())
+app.use(bodyParser());
 
 app.get('/', function(req, res){
     res.send('Search engine');
@@ -17,18 +17,16 @@ app.get('/', function(req, res){
 
 app.post('/crawl', function(req, res){
   
-    var url = req.body.url;
-    
-    console.log("Start crawling " + url);
+    console.log("Request to crawl " + req.body.url);
 
-    crawler.crawl(url)
-        .on("fetchcomplete",function(queueItem, responseBuffer , response){
-            if (response.headers['content-type'] == "text/html"){
-                console.log("Completed fetching resource:",queueItem.url);
-            }
+    crawler.crawl(req.body.url, function(url, responseBuffer , response){
+            // TODO
+            console.log("Parsing " + url);
         });
   
-    res.send('OK');
+    res.send('OK: Crawling in progress...');
 });
 
-app.listen(process.env.PORT);
+app.listen(config.web.port);
+
+console.log("search-crawler running...");

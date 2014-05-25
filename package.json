@@ -1,0 +1,22 @@
+{
+  "name": "search-crawler",
+  "description": "search-crawler experimental app",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "4.3.1",
+    "body-parser": "1.2.0",
+    "URIjs": "1.13.2",
+    "simplecrawler": "0.3.8"
+  },
+  "homepage": "https://github.com/davideicardi/search-crawler",
+  "author": {
+    "name": "Davide Icardi",
+    "email": "davide.icardi@cgiffard.com"
+  },
+  "keywords": [
+    "search",
+    "crawler"
+  ], 
+  "license": "MIT"
+}
