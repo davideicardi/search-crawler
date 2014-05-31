@@ -37,8 +37,18 @@ exports.crawl = function(urlToCrawl, processPage){
             
             console.log("Processing " + queueItem.url);
 
-            processPage(queueItem.url, responseBuffer, response);
+            processPage(queueItem.url, responseBuffer.toString('utf-8'));
         });
   
+    simpleCrawlerInstance.on("fetcherror",function(queueItem, response){
+        console.log("Error processing " + queueItem.url);
+    });
+    simpleCrawlerInstance.on("fetch404",function(queueItem, response){
+        console.log("Error 404 processing " + queueItem.url);
+    });
+    simpleCrawlerInstance.on("fetchclienterror",function(queueItem, errorData){
+        console.log("Error processing " + queueItem.url);
+    });
+    
     simpleCrawlerInstance.start();    
 };
