@@ -86,6 +86,6 @@ database.init()
     console.log("search-crawler running...");
 })
 .fail(function(error){
-    console.log("failed to connect to database.");
+    console.log(error);
 });
 
