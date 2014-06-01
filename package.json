@@ -8,7 +8,8 @@
     "body-parser": "1.2.0",
     "URIjs": "1.13.2",
     "simplecrawler": "0.3.8",
-    "cheerio": "0.16.0"
+    "cheerio": "0.16.0",
+    "mongodb": "1.4.5"
   },
   "homepage": "https://github.com/davideicardi/search-crawler",
   "author": {
