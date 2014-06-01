@@ -40,7 +40,7 @@ app.post('/crawl', function(req, res){
 
 app.post('/create-site', function(req, res){
 
-    var site = { url: req.body.url, name: req.body.name};
+    var site = req.body;
 
     console.log("Creating site " + site.name + " at url " + site.url);
 
@@ -55,7 +55,7 @@ app.post('/create-site', function(req, res){
 
 app.post('/remove-site', function(req, res){
 
-    var site = { _id: req.body._id, name: req.body.name};
+    var site = req.body;
 
     console.log("Removing site " + site.name + "-" + site._id);
 
