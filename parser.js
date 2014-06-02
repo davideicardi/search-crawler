@@ -7,7 +7,9 @@ exports.parse = function(htmlContent){
     
     var result = {};
     
-    result.pageTitle = $('html head title').text();
+    result.title = $('html head title').text();
+    result.description = "";
+    result.body = $('html body').text();;
     
     return result;
 };

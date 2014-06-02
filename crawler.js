@@ -1,5 +1,7 @@
 var SimpleCrawler = require("simplecrawler");
+var http = require('http');
 var URI     = require("URIjs");
+var Q = require("q");
 var config = require("./config.js"); 
 
 exports.crawl = function(urlToCrawl, processPage){
@@ -51,4 +53,39 @@ exports.crawl = function(urlToCrawl, processPage){
     });
     
     simpleCrawlerInstance.start();    
+};
+
+exports.getPage = function(pageUrl){
+    var url = URI(pageUrl);
+
+    if (!url.protocol())
+        throw new Error("Can't get with unspecified protocol.");
+    if (!url.hostname())
+        throw new Error("Can't get with unspecified hostname.");
+    if (!url.path())
+        throw new Error("Can't get with unspecified path.");
+    
+    var options = {
+            host: url.hostname(),
+            path: url.path(),
+            port: url.port() || 80
+          };
+
+    var deferred = Q.defer();
+    
+    var callback = function(response) {
+        var buffer = '';
+    
+        response.on('data', function (chunk) {
+            buffer += chunk;
+        });
+    
+        response.on('end', function () {
+            deferred.resolve(buffer);
+        });
+      };
+    
+    http.request(options, callback).end();
+
+    return deferred.promise;
 };

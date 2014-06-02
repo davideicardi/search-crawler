@@ -38,6 +38,8 @@ app.post('/crawl', function(req, res){
     res.send('OK: Crawling in progress...');
 });
 
+// site
+
 app.post('/create-site', function(req, res){
 
     var site = req.body;
@@ -78,6 +80,36 @@ app.get('/sites', function(req, res){
         errorPage(res, error);
     });
 });
+
+
+// page
+app.post('/register-page', function(req, res){
+
+    var url = req.body.url;
+    var siteName = req.body.siteName;
+    
+    console.log("Registering page " + url + " for site " + siteName);
+
+    crawler.getPage(url)
+    .then(function(htmlContent){
+        var page = parser.parse(htmlContent);
+
+        page.url = url;
+        
+        console.log("   Title " + page.title);
+        console.log("   Body " + page.body);
+        console.log("   Description " + page.description);
+        
+        database.inserPage(page, siteName)
+        .then(function(result){
+            res.json({status:"ok"});
+        })
+        .fail(function(error){
+            errorPage(res, error);
+        });
+    });
+});
+
 
 database.init()
 .then(function() {

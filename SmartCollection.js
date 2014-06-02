@@ -86,4 +86,35 @@ SmartCollection.prototype.find = function(query) {
     return deferred.promise;
 };
 
+SmartCollection.prototype.findOne = function(query, fields, options) {
+    var deferred = Q.defer();
+    
+    this._collection.find(query, fields, options, function(err, result){
+        if (err)
+            deferred.reject(err);
+        else
+            deferred.resolve(result);
+    });  
+    
+    return deferred.promise;
+};
+
+SmartCollection.prototype.findText = function(query, limit) {
+    var deferred = Q.defer();
+    
+    this._collection.find(
+            query,
+            { score: { $meta: "textScore" } }
+         ).sort( { score: { $meta: "textScore" } } )
+         .limit(limit)
+         .toArray(function(err, result){
+        if (err)
+            deferred.reject(err);
+        else
+            deferred.resolve(result);
+    });  
+    
+    return deferred.promise;
+};
+
 module.exports = SmartCollection;
