@@ -82,7 +82,8 @@ app.get('/sites', function(req, res){
 });
 
 
-// page
+// pages
+
 app.post('/register-page', function(req, res){
 
     var url = req.body.url;
@@ -96,20 +97,30 @@ app.post('/register-page', function(req, res){
 
         page.url = url;
         
-        console.log("   Title " + page.title);
-        console.log("   Body " + page.body);
-        console.log("   Description " + page.description);
-        
-        database.inserPage(page, siteName)
-        .then(function(result){
-            res.json({status:"ok"});
-        })
-        .fail(function(error){
-            errorPage(res, error);
-        });
+        return database.insertPage(page, siteName);
+    })
+    .then(function(result){
+        res.json(result);
+    })
+    .fail(function(error){
+        errorPage(res, error);
     });
 });
 
+app.get('/search', function(req, res){
+
+    var queryExpression = req.query.q;
+    var siteName = req.query.site;
+    
+    
+    database.searchPages(queryExpression, siteName)
+    .then(function(result){
+        res.json(result);
+    })
+    .fail(function(error){
+        errorPage(res, error);
+    });
+});
 
 database.init()
 .then(function() {

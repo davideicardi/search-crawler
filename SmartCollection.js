@@ -89,7 +89,7 @@ SmartCollection.prototype.find = function(query) {
 SmartCollection.prototype.findOne = function(query, fields, options) {
     var deferred = Q.defer();
     
-    this._collection.find(query, fields, options, function(err, result){
+    this._collection.findOne(query, fields, options, function(err, result){
         if (err)
             deferred.reject(err);
         else
