@@ -4,6 +4,18 @@ var URI     = require("URIjs");
 var Q = require("q");
 var config = require("./config.js"); 
 
+var isValidContentType = function(contentType){
+  var i;
+  for (i = 0; i < config.crawler.contentTypes.length; i++){
+      var validType = config.crawler.contentTypes[i];
+      if (contentType.indexOf(validType) > -1){
+          return true;
+      }
+  }
+  
+  return false;
+};
+
 exports.crawl = function(urlToCrawl, processPage){
   
     var url = URI(urlToCrawl);
@@ -24,7 +36,7 @@ exports.crawl = function(urlToCrawl, processPage){
         
         var excludedRegExp = new RegExp("\.(" + config.crawler.excludedExtensions + ")$", "i");
         
-        return !parsedURL.path.match(excludedRegExp);
+        return !parsedURL.uriPath.match(excludedRegExp);
     });
     
     simpleCrawlerInstance.on("crawlstart",function() {
@@ -35,8 +47,12 @@ exports.crawl = function(urlToCrawl, processPage){
         console.log("Crawl finished!");
     });
 
-    simpleCrawlerInstance.on("fetchcomplete",function(queueItem, responseBuffer , response){
-            
+    simpleCrawlerInstance.on("fetchcomplete",function(queueItem, responseBuffer, response){
+        
+            if (!isValidContentType(response.headers["content-type"])){
+                return;
+            }
+        
             console.log("Processing " + queueItem.url);
 
             processPage(queueItem.url, responseBuffer.toString('utf-8'));

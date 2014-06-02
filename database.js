@@ -149,7 +149,12 @@ exports.removePages = function(siteName){
         return myDb.pages.remove({ siteId : site._id.toString() });
     });    
 };
-exports.searchPages = function(expression, siteName){
+exports.searchPages = function(expression, siteName, limit){
+    
+    if (limit < 0 || limit > 100){
+        limit = 20;
+    }
+    
     return exports.getSite(siteName)
     .then(function(site){
         if (!site) {
@@ -159,6 +164,6 @@ exports.searchPages = function(expression, siteName){
         var siteId = site._id.toString();
         return myDb.pages.findText(
                 { siteId : siteId, $text: { $search: expression } },
-                20);
+                limit);
     }); 
 };

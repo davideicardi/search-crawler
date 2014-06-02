@@ -22,22 +22,6 @@ app.get('/', function(req, res){
     res.send('Search engine');
 });
 
-app.post('/crawl', function(req, res){
-
-    console.log("Request to crawl " + req.body.url);
-
-    crawler.crawl(req.body.url, function(url, htmlContent){
-        // TODO
-        console.log("Parsing " + url);
-
-        var result = parser.parse(htmlContent);
-
-        console.log("   Title " + result.pageTitle);
-    });
-
-    res.send('OK: Crawling in progress...');
-});
-
 // site
 
 app.post('/create-site', function(req, res){
@@ -46,7 +30,7 @@ app.post('/create-site', function(req, res){
 
     console.log("Creating site " + site.name + " at url " + site.url);
 
-    database.createSite(site)
+    database.insertSite(site)
     .then(function(inserted){
         res.json(inserted);
     })
@@ -75,6 +59,47 @@ app.get('/sites', function(req, res){
     database.getSites()
     .then(function(result){
         res.json(result);
+    })
+    .fail(function(error){
+        errorPage(res, error);
+    });
+});
+
+app.post('/crawl-site', function(req, res){
+
+    var siteName = req.body.siteName;
+    
+    console.log("Request to crawl site " + siteName);
+    
+    database.getSite(siteName)
+    .then(function(site){
+        if (!site) {
+            throw new Error("Invalid site " + siteName);
+        }
+        
+        return database.removePages(siteName)
+        .then(function(){
+
+            crawler.crawl(site.url, function(url, htmlContent){
+                console.log("Parsing " + url);
+
+                var page = parser.parse(htmlContent);
+                page.url = url;
+                
+                database.insertPage(page, siteName)
+                .fail(function(error){
+                    console.log("Error inserting page " + error);
+                });
+            });
+            
+            return true;
+        })
+        .fail(function(error){
+            console.log("Error removing pages " + error);
+        });
+    })
+    .then(function(){
+        res.send('OK: Crawling in progress...');
     })
     .fail(function(error){
         errorPage(res, error);
@@ -111,9 +136,9 @@ app.get('/search', function(req, res){
 
     var queryExpression = req.query.q;
     var siteName = req.query.site;
+    var limit = parseInt(req.query.limit);
     
-    
-    database.searchPages(queryExpression, siteName)
+    database.searchPages(queryExpression, siteName, limit)
     .then(function(result){
         res.json(result);
     })
