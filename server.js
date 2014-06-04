@@ -4,6 +4,7 @@
 
 var express    = require('express');
 var bodyParser = require('body-parser');
+
 var crawler = require("./crawler.js");
 var config = require("./config.js");
 var parser = require("./parser.js");
@@ -11,15 +12,18 @@ var database = require("./database.js");
 
 var app = express();
 
-app.use(bodyParser());
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
 
+app.use(bodyParser());
+app.use(express.static(__dirname + '/public'));
 
 var errorPage = function(res, err){
     res.json(err);
 };
 
 app.get('/', function(req, res){
-    res.send('Search engine');
+    res.render('index', { title : 'Home' });
 });
 
 // site
