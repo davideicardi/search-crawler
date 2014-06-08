@@ -54,7 +54,7 @@ SmartCollection.prototype.insert = function(document) {
         if (err)
             deferred.reject(err);
         else
-            deferred.resolve(inserted);
+            deferred.resolve(inserted[0]);
     });
 
     return deferred.promise;

@@ -27,8 +27,31 @@ app.get('/', function(req, res){
 });
 
 // site
+app.get('/api/sites', function(req, res){
 
-app.post('/create-site', function(req, res){
+    database.getSites()
+    .then(function(result){
+        res.json(result);
+    })
+    .fail(function(error){
+        errorPage(res, error);
+    });
+});
+
+app.get('/api/sites/:siteName', function(req, res){
+
+    var siteName = req.param("siteName");
+    
+    database.getSite(siteName)
+    .then(function(result){
+        res.json(result);
+    })
+    .fail(function(error){
+        errorPage(res, error);
+    });
+});
+
+app.post('/api/sites', function(req, res){
 
     var site = req.body;
 
@@ -43,13 +66,13 @@ app.post('/create-site', function(req, res){
     });
 });
 
-app.post('/remove-site', function(req, res){
+app['delete']('/api/sites/:siteName', function(req, res){
 
-    var site = req.body;
+    var siteName = req.param("siteName");
 
-    console.log("Removing site " + site.name + "-" + site._id);
+    console.log("Removing site " + siteName);
 
-    database.removeSite(site)
+    database.removeSite({name:siteName})
     .then(function(result){
         res.json(result);
     })
@@ -58,18 +81,8 @@ app.post('/remove-site', function(req, res){
     });
 });
 
-app.get('/sites', function(req, res){
 
-    database.getSites()
-    .then(function(result){
-        res.json(result);
-    })
-    .fail(function(error){
-        errorPage(res, error);
-    });
-});
-
-app.post('/crawl-site', function(req, res){
+app.post('/api/crawl-site', function(req, res){
 
     var siteName = req.body.siteName;
     
@@ -113,7 +126,7 @@ app.post('/crawl-site', function(req, res){
 
 // pages
 
-app.post('/register-page', function(req, res){
+app.post('/api/register-page', function(req, res){
 
     var url = req.body.url;
     var siteName = req.body.siteName;
@@ -136,7 +149,7 @@ app.post('/register-page', function(req, res){
     });
 });
 
-app.get('/search', function(req, res){
+app.get('/api/search', function(req, res){
 
     var queryExpression = req.query.q;
     var siteName = req.query.site;

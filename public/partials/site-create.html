@@ -1,0 +1,10 @@
+
+<h2>Create site: {{site.name}}</h2>
+
+<form ng-submit="createSite()">
+  <input type="text" ng-model="site.name"
+         placeholder="new name" required>
+  <input type="text" ng-model="site.url"
+         placeholder="new url" required>
+  <input class="button" type="submit" value="add">
+</form>
