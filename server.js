@@ -1,9 +1,11 @@
+// Main nodejs entry point
 
-//run "npm install" to install all dependencies
-//see config.js for configuration
+// run "npm install" to install all dependencies
+// see config.js for configuration
 
 var express    = require('express');
 var bodyParser = require('body-parser');
+var swig = require('swig');
 
 var crawler = require("./crawler.js");
 var config = require("./config.js");
@@ -13,7 +15,9 @@ var database = require("./database.js");
 var app = express();
 
 app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
+
+app.engine('html', swig.renderFile);
+app.set('view engine', 'html');
 
 app.use(bodyParser());
 app.use(express.static(__dirname + '/public'));
@@ -23,7 +27,7 @@ var errorPage = function(res, err){
 };
 
 app.get('/', function(req, res){
-    res.render('index', { title : 'Home' });
+    res.render('index', { });
 });
 
 // site

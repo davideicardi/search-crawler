@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>search-crawler</title>
+
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/foundation/5.2.3/css/foundation.min.css">
+	<link rel="stylesheet" href="/foundation-icons/foundation-icons.css">
+	
+	<link rel="stylesheet" href="/app.css">
+
+	<!--script(src="/javascripts/modernizr.foundation.js")-->
+	<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-resource.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js"></script>
+
+	<script src="/app.sites.js"></script>
+	<script src="/app.js"></script>
+</head>
+<body>
+	<div class="row">
+		<div class="large-4 columns">
+			<h1>
+				search-crawler
+			</h1>
+		</div>
+		<div class="large-8 columns">
+			<ul class="right button-group">
+				<li><a ui-sref="admin.sites" class="button">Sites</a></li>
+				<li><a href="#" class="button">Link 2</a></li>
+				<li><a href="#" class="button">Link 3</a></li>
+				<li><a href="#" class="button">Link 4</a></li>
+			</ul>
+		</div>
+	</div>
+
+
+	<div ui-view>
+	</div>
+
+
+	<footer class="row">
+		<div class="large-12 columns">
+			<hr />
+			<div class="row">
+				<div class="large-6 columns">
+					<p>© Copyright Davide Icardi. Powered by nodejs + Express + MongoDB + swig + AngularJs +
+			Foundation.</p>
+				</div>
+				<div class="large-6 columns">
+					<ul class="inline-list right">
+						<li><a ui-sref="admin.sites">Sites</a></li>
+						<li><a href="#">Link 2</a></li>
+						<li><a href="#">Link 3</a></li>
+						<li><a href="#">Link 4</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+</body>
+</html>

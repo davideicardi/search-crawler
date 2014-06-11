@@ -2,77 +2,45 @@
 
 /* App Module */
 
-var searchCrawlerApp = angular.module('searchCrawlerApp', [
-  'ngRoute',
-  'ngResource'
+var myApp = angular.module('myApp', [
+  'ui.router',
+  'ngResource',
+  'myApp.sites'
 ]);
 
-searchCrawlerApp.config(['$routeProvider',
-  function($routeProvider) {
-    $routeProvider.
-      when('/sites', {
-        templateUrl: 'partials/site-list.html',
-        controller: 'SiteListController'
-      }).
-      when('/sites/create', {
-          templateUrl: 'partials/site-create.html',
+myApp.config(['$stateProvider', '$urlRouterProvider',
+  function($stateProvider, $urlRouterProvider) {
+
+    $urlRouterProvider.otherwise("/home");
+
+    $stateProvider
+      .state('home', {
+        url: "/home",
+        templateUrl: "partials/home.html"
+      })
+      .state('admin', {
+        url: "/admin",
+        abstract: true,
+        templateUrl: "partials/admin.html"
+      })
+      .state('admin.sites', {
+          url: "/sites",
+          templateUrl: "partials/sites.html",
+          controller: 'SitesController'
+        })
+      .state('admin.sites.create', {
+          url: "/create",
+          templateUrl: "partials/sites.create.html",
           controller: 'SiteCreateController'
-        }).
-      when('/sites/detail/:siteName', {
-        templateUrl: 'partials/site-detail.html',
-        controller: 'SiteDetailController'
-      }).
-      otherwise({
-        redirectTo: '/sites'
-      });
-  }]);
-
-
-/////////////////////////////////
-// Controllers
-/////////////////////////////////
-
-searchCrawlerApp.controller('SiteListController', ['$scope', 'SiteApi',
- function($scope, SiteApi) {
+        })
+      .state('admin.sites.detail', {
+        url: "/detail/:siteName",
+          templateUrl: "partials/sites.detail.html",
+          controller: 'SiteDetailController'
+        })
+        ;
     
-   $scope.sites = SiteApi.query();
-   
- }]);
+  }]);    
 
-searchCrawlerApp.controller('SiteDetailController', ['$scope', '$routeParams', '$location', 'SiteApi',
-   function($scope, $routeParams, $location, SiteApi) {
-     $scope.site = SiteApi.get({siteName:$routeParams.siteName});
-     
-     $scope.remove = function(){
-       SiteApi.remove({siteName: $scope.site.name}, function() {
-           $location.path("/sites");
-       });
-     };
-   }]);
-
-searchCrawlerApp.controller('SiteCreateController', ['$scope', '$location', 'SiteApi',
-   function($scope, $location, SiteApi) {
-      
-    $scope.site = {};
-     
-     $scope.createSite = function(){
-         var newSite = new SiteApi();
-         newSite.name = $scope.site.name;
-         newSite.url = $scope.site.url;
-         
-         newSite.$save({}, function() {
-             $location.path("/sites");
-         });
-     };
-   }]);
-
-/////////////////////////////////
-// Services
-/////////////////////////////////
-
-searchCrawlerApp.factory('SiteApi', ['$resource',
-   function($resource){
-     return $resource('/api/sites/:siteName');
-   }]);
 
 
