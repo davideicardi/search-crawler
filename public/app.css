@@ -1,5 +1,9 @@
 
 
+#logo h1 {
+	font-size: 2rem;
+}
+
 h4 .name {
 	font-style: italic;
 	font-weight: bold;
