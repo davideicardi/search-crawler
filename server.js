@@ -23,12 +23,18 @@ app.use(bodyParser());
 app.use(express.static(__dirname + '/public'));
 
 var errorPage = function(res, err){
+    res.statusCode = 500;
     res.json(err);
 };
 
+
+// home page
 app.get('/', function(req, res){
     res.render('index', { });
 });
+
+
+// API
 
 // site
 app.get('/api/sites', function(req, res){
@@ -127,13 +133,10 @@ app.post('/api/crawl-site', function(req, res){
     });
 });
 
-
-// pages
-
-app.post('/api/register-page', function(req, res){
+app.post('/api/sites/:siteName/register-page', function(req, res){
 
     var url = req.body.url;
-    var siteName = req.body.siteName;
+    var siteName = req.param("siteName");
     
     console.log("Registering page " + url + " for site " + siteName);
 
@@ -153,6 +156,37 @@ app.post('/api/register-page', function(req, res){
     });
 });
 
+app.post('/api/sites/:siteName/remove-pages', function(req, res){
+
+    var siteName = req.param("siteName");
+    
+    console.log("Removing all pages for " + siteName);
+
+    return database.removePages(siteName)
+    .then(function(result){
+        res.json(result);
+    })
+    .fail(function(error){
+        errorPage(res, error);
+    });
+});
+
+app.get('/api/sites/:siteName/page-count', function(req, res){
+
+    var siteName = req.param("siteName");
+    
+    database.sitePageCount(siteName)
+    .then(function(result){
+        res.json({value:result});
+    })
+    .fail(function(error){
+        errorPage(res, error);
+    });    
+});
+
+
+// search
+
 app.get('/api/search', function(req, res){
 
     var queryExpression = req.query.q;
@@ -167,6 +201,9 @@ app.get('/api/search', function(req, res){
         errorPage(res, error);
     });
 });
+
+
+
 
 database.init()
 .then(function() {

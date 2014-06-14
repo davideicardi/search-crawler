@@ -86,6 +86,19 @@ SmartCollection.prototype.find = function(query) {
     return deferred.promise;
 };
 
+SmartCollection.prototype.count = function(query) {
+    var deferred = Q.defer();
+    
+    this._collection.find(query).count(function(err, result){
+        if (err)
+            deferred.reject(err);
+        else
+            deferred.resolve(result);
+    });  
+    
+    return deferred.promise;
+};
+
 SmartCollection.prototype.findOne = function(query, fields, options) {
     var deferred = Q.defer();
     

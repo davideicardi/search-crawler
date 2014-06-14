@@ -4,6 +4,10 @@
 	font-size: 2rem;
 }
 
+.user-action i {
+	font-size: larger;
+}
+
 h4 .name {
 	font-style: italic;
 	font-weight: bold;

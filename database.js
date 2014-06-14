@@ -42,8 +42,8 @@ exports.init = function(){
                     db, 
                     "sites", 
                     schema({
-                        name: { type: 'string', required: true, message: 'name is required' },
-                        url: { type: 'string', required: true, match: /http.{3,}/, message: 'url must be valid' }
+                        name: { type: 'string', required: true, match: /^\w{3,20}$/, message: 'name is required' },
+                        url: { type: 'string', required: true, match: /^http.{3,}/, message: 'url must be valid' }
                       }),
                     [
                      {index: {name:1}, options: {unique:true}}
@@ -115,6 +115,18 @@ exports.insertPage = function(page, siteName){
         page.siteId = site._id.toString();
         
         return myDb.pages.insert(page);
+    });
+};
+exports.sitePageCount = function(siteName){
+    return exports.getSite(siteName)
+    .then(function(site){
+        if (!site) {
+            throw new Error("Site " + siteName + " not found");
+        }
+        
+        var siteId = site._id.toString();
+        
+        return myDb.pages.count({siteId:siteId});
     });
 };
 exports.removePage = function(page, siteName){

@@ -1,6 +1,65 @@
 
-<h4>Site: <span class="name">{{site.name}}</span></h4>
+<div class="row">
+	<button
+		class="button alert user-action small right" 
+		ng-click="remove()" 
+		ng-confirm-click="Delete {{site.name}}?">
+		<i class="fi-trash">	</i> Delete
+	</button>
+
+	<h4>Site: <span class="name">{{site.name}}</span></h4>
+</div>
+
+<div class="row">
+	<div class="panel clearfix">
+		<p>
+			URL: {{site.url}}
+		</p>
+		<button 
+			class="button user-action" 
+			ng-click="crawl()" 
+			ng-confirm-click="Start crawl {{site.name}}?">
+			<i class="fi-refresh">	</i> Start crawling
+		</button>
+	</div>
+</div>
+
+<div class="row">
+	<div class="panel callout clearfix">
+		<p><strong>{{pageCount.value}}</strong> pages indexed in this site</p>
+		<button 
+			class="button user-action"
+			data-reveal-id="registerSitePageModal">
+			<i class="fi-page-add">	</i> Register page
+		</button>
+		
+		<button 
+			class="button user-action"
+			ng-click="removeAllPages()" ng-confirm-click="Removing all {{site.name}} pages?">
+			<i class="fi-page-remove">	</i> Remove all pages
+		</button>
+	</div>
+</div>
 
 
 
-<button class="button" ng-click="remove()" ><i class="fi-trash">	</i> Delete</button>
+<div id="registerSitePageModal" class="reveal-modal tiny" data-reveal>
+
+	<div class="row">
+    <div class="large-12 columns">
+    	<form ng-submit="registerPage(pageToRegister);$event.preventDefault()" onsubmit="$('#registerSitePageModal').foundation('reveal', 'close');">
+			  <h4>Register a page on <span class="name">{{site.name}}</span> site</h4>
+			  
+				<label>
+					<input type="url" required placeholder="page url" ng-model="pageToRegister" />
+				</label>
+				
+				<button type="submit" class="button small">Register</button>
+				<button type="button" class="button small" 
+						onclick="$('#registerSitePageModal').foundation('reveal', 'close');">Cancel</button>
+    	</form>
+    </div>
+  </div>
+	
+  <a class="close-reveal-modal">&#215;</a>
+</div>

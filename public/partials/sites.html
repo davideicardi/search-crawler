@@ -8,7 +8,7 @@
 		    <tr>
 		      <th>Name</th>
 		      <th>Url</th>
-		      <th><a ui-sref="admin.sites.create"><i class="fi-plus"></i></a></th>
+		      <th><a ui-sref="admin.sites.create" class="user-action"><i class="fi-plus"></i></a></th>
 		    </tr>
 		  </thead>
 		  <tbody>
@@ -20,7 +20,7 @@
 		      </td>
 		      <td><a href="{{site.url}}">{{site.url}}</a></td>
 			    <td>
-			      <a href="#/sites/edit/{{site.name}}"><i class="fi-pencil"></i></a>
+			      <a ui-sref="admin.sites.detail({ siteName : site.name })" title="detail" class="user-action"><i class="fi-pencil"></i></a>
 			    </td>      
 		    </tr>
 		  </tbody>

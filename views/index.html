@@ -10,14 +10,8 @@
 	
 	<link rel="stylesheet" href="/app.css">
 
-	<!--script(src="/javascripts/modernizr.foundation.js")-->
-	<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-resource.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.min.js"></script>
 
-	<script src="/app.sites.js"></script>
-	<script src="/app.js"></script>
 </head>
 <body>
 	<div class="row">
@@ -38,7 +32,6 @@
 			</ul>
 		</div>
 	</div>
-
 
 	<div ui-view>
 	</div>
@@ -66,5 +59,18 @@
 		</div>
 	</footer>
 
+
+	<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-resource.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js"></script>
+
+	<script src="//cdn.jsdelivr.net/foundation/5.2.3/js/foundation.min.js"></script>
+
+	<script src="/app.sites.js"></script>
+	<script src="/app.js"></script>
+	<script>
+	  $(document).foundation();
+	</script>
 </body>
 </html>
