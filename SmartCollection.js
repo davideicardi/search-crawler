@@ -73,6 +73,20 @@ SmartCollection.prototype.remove = function(query) {
     return deferred.promise;
 };
 
+SmartCollection.prototype.update = function(criteria, update) {
+    var deferred = Q.defer();
+  
+    this._collection.update(criteria, update, {}, function(err, result){
+        if (err)
+            deferred.reject(err);
+        else
+            deferred.resolve(result);
+    });
+
+    return deferred.promise;
+};
+
+
 SmartCollection.prototype.find = function(query) {
     var deferred = Q.defer();
     

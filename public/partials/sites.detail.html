@@ -14,39 +14,47 @@
 </div>
 
 <div class="row">
-	<div class="large-12 columns">
+	<div class="large-6 columns">
 		<div class="panel clearfix">
+		
 			<p>
 				URL: {{site.url}}
 			</p>
+			
 			<button 
-				class="button user-action" 
+				class="button user-action small" 
 				ng-click="crawl()" 
 				ng-confirm-click="Start crawling {{site.name}}?">
 				<i class="fi-refresh">	</i> Start crawling
 			</button>
+
+			<button 
+				class="button user-action small"
+				ng-click="editConfig()"
+				data-reveal-id="editSiteConfigModal">
+				<i class="fi-pencil">	</i> Edit Config
+			</button>
 		</div>
 	</div>
-</div>
-
-<div class="row">
-	<div class="large-12 columns">
+	
+	<div class="large-6 columns">
 		<div class="panel callout clearfix">
 			<p><strong>{{pageCount.value}}</strong> pages indexed in this site</p>
 			<button 
-				class="button user-action"
+				class="button user-action small"
 				data-reveal-id="registerSitePageModal">
 				<i class="fi-page-add">	</i> Register page
 			</button>
 			
 			<button 
-				class="button user-action"
+				class="button user-action small"
 				ng-click="removeAllPages()" ng-confirm-click="Removing all {{site.name}} pages?">
 				<i class="fi-page-remove">	</i> Remove all pages
 			</button>
 		</div>
 	</div>
 </div>
+
 
 <div class="row">
 	<div class="large-12 columns">
@@ -99,6 +107,28 @@
 				<button type="submit" class="button small">Register</button>
 				<button type="button" class="button small" 
 						onclick="$('#registerSitePageModal').foundation('reveal', 'close');">Cancel</button>
+    	</form>
+    </div>
+  </div>
+	
+  <a class="close-reveal-modal">&#215;</a>
+</div>
+
+
+<div id="editSiteConfigModal" class="reveal-modal tiny" data-reveal>
+
+	<div class="row">
+    <div class="large-12 columns">
+    	<form ng-submit="updateConfig();$event.preventDefault()" onsubmit="$('#editSiteConfigModal').foundation('reveal', 'close');">
+			  <h4>Update <span class="name">{{site.name}}</span> site configuration</h4>
+
+				<label> Configuration
+					<textarea rows="10" cols="20" required ng-model="editableConfig" />
+				</label>
+				
+				<button type="submit" class="button small">Update</button>
+				<button type="button" class="button small" 
+						onclick="$('#editSiteConfigModal').foundation('reveal', 'close');">Cancel</button>
     	</form>
     </div>
   </div>

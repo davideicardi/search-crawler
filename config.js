@@ -14,8 +14,9 @@ config.crawler.contentTypes = ["text/html"];
 config.db.mongo = {};
 config.db.mongo.url = "mongodb://localhost:27017/search-crawler";
 
-// html "jquery style" selector for the body content
-config.parser.contentSelector = "body";
+// html "jquery style" selector for the body content (es. "body", "article", "div#text")
+//  can be override on each site
+config.parser.defaultContentSelector = "body";
 
 // nodejs server listening port
 config.web.port = process.env.WEB_PORT || 8181;

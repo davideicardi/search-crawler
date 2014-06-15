@@ -66,7 +66,7 @@ app.get('/', function(req, res){
 
 // API
 
-// site
+// Site List
 app.get('/api/sites', function(req, res){
 
     database.getSites()
@@ -78,6 +78,7 @@ app.get('/api/sites', function(req, res){
     });
 });
 
+// Site Get
 app.get('/api/sites/:siteName', function(req, res){
 
     var siteName = req.param("siteName");
@@ -91,6 +92,7 @@ app.get('/api/sites/:siteName', function(req, res){
     });
 });
 
+// Site Create
 app.post('/api/sites', function(req, res){
 
     var site = req.body;
@@ -106,6 +108,24 @@ app.post('/api/sites', function(req, res){
     });
 });
 
+// Site Update Config
+app.post('/api/sites/:siteName/update-config', function(req, res){
+
+    var newConfig = req.body;
+    var siteName = req.param("siteName");
+
+    console.log("Update site " + siteName + " config");
+
+    database.updateSiteConfig({ name: siteName, config: newConfig })
+    .then(function(updated){
+        res.json(updated);
+    })
+    .fail(function(error){
+        errorPage(res, error);
+    });
+});
+
+// Site Delete
 app['delete']('/api/sites/:siteName', function(req, res){
 
     var siteName = req.param("siteName");
@@ -121,7 +141,7 @@ app['delete']('/api/sites/:siteName', function(req, res){
     });
 });
 
-
+// Site Crawl
 app.post('/api/sites/:siteName/crawl', function(req, res){
 
     var siteName = req.param("siteName");
@@ -140,7 +160,7 @@ app.post('/api/sites/:siteName/crawl', function(req, res){
             crawler.crawl(site.url, function(url, htmlContent){
                 console.log("Parsing " + url);
 
-                var page = parser.parse(htmlContent);
+                var page = parser.parse(htmlContent, site.config);
                 page.url = url;
                 
                 database.insertPage(page, siteName)
@@ -160,6 +180,7 @@ app.post('/api/sites/:siteName/crawl', function(req, res){
     });
 });
 
+// Site Register Page
 app.post('/api/sites/:siteName/register-page', function(req, res){
 
     var url = req.body.url;
@@ -167,16 +188,23 @@ app.post('/api/sites/:siteName/register-page', function(req, res){
     
     console.log("Registering page " + url + " for site " + siteName);
 
-    database.removePage({url:url}, siteName)
-    .then(function(){
-
-        return crawler.getPage(url)
-        .then(function(htmlContent){
-            var page = parser.parse(htmlContent);
+    database.getSite(siteName)
+    .then(function(site){
+        if (!site) {
+            throw new Error("Invalid site " + siteName);
+        } 
+        
+        database.removePage({url:url}, siteName)
+        .then(function(){
     
-            page.url = url;
-            
-            return database.insertPage(page, siteName);
+            return crawler.getPage(url)
+            .then(function(htmlContent){
+                var page = parser.parse(htmlContent, site.config);
+        
+                page.url = url;
+                
+                return database.insertPage(page, siteName);
+            });
         });
     })
     .then(function(result){
@@ -187,6 +215,7 @@ app.post('/api/sites/:siteName/register-page', function(req, res){
     });
 });
 
+// Site Remove Pages
 app.post('/api/sites/:siteName/remove-pages', function(req, res){
 
     var siteName = req.param("siteName");
@@ -216,8 +245,7 @@ app.get('/api/sites/:siteName/page-count', function(req, res){
 });
 
 
-// search
-
+// Search
 app.get('/api/sites/:siteName/search', function(req, res){
 
     var siteName = req.param("siteName");

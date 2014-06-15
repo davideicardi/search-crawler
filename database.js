@@ -1,6 +1,7 @@
 var mongoClient = require("mongodb").MongoClient;
 var ObjectID = require("mongodb").ObjectID;
 var Q = require("q");
+
 var schema = require('validate');
 
 var config = require("./config.js"); 
@@ -43,7 +44,8 @@ exports.init = function(){
                     "sites", 
                     schema({
                         name: { type: 'string', required: true, match: /^\w{3,20}$/, message: 'name is required' },
-                        url: { type: 'string', required: true, match: /^http.{3,}/, message: 'url must be valid' }
+                        url: { type: 'string', required: true, match: /^http.{3,}/, message: 'url must be valid' },
+                        config: { contentSelector : { type: 'string', required: true, message: 'config.contentSelector is required' } }
                       }),
                     [
                      {index: {name:1}, options: {unique:true}}
@@ -78,8 +80,30 @@ exports.init = function(){
 
 // sites 
 exports.insertSite = function(site){
+    
+    if (!site.config){
+        site.config = {};
+    }
+    
+    if (!site.config.contentSelector){
+        site.config.contentSelector = config.parser.defaultContentSelector;
+    }
+    
     return myDb.sites.insert(site);
 };
+
+exports.updateSiteConfig = function(site){
+    var update = {$set:{config:site.config}};
+    
+    if (typeof site._id == "string"){
+        return myDb.sites.update({ _id : ObjectID(site._id) }, update);
+    }else if (typeof site.name == "string"){
+        return myDb.sites.update({ name : site.name }, update);
+    } else {
+        return createError("Invalid site, name or _id expected.");
+    }
+};
+
 exports.removeSite = function(site){
     if (typeof site._id == "string"){
         return myDb.sites.remove({ _id : ObjectID(site._id) });

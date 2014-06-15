@@ -2,7 +2,7 @@ var cheerio = require('cheerio');
 
 var config = require("./config.js"); 
 
-exports.parse = function(htmlContent){
+exports.parse = function(htmlContent, siteConfig){
     
     $ = cheerio.load(htmlContent);
 
@@ -12,7 +12,7 @@ exports.parse = function(htmlContent){
     result.title = $('head title').text() || "no-title";
     result.description = $('meta[name="description"]').attr('content') || result.title;
     
-    var contentSelector = config.parser.contentSelector || 'article';
+    var contentSelector = siteConfig.contentSelector || config.parser.contentSelector || 'article';
     result.body = $(contentSelector).text();
     
     return result;

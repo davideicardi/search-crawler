@@ -17,13 +17,17 @@ myAppSites.controller('SiteListController', ['$scope', 'SiteApi',
 myAppSites.controller('SiteDetailController', ['$scope', '$stateParams', '$state', 'SiteApi',
    function($scope, $stateParams, $state, SiteApi) {
     
-     $scope.site = SiteApi.get({siteName:$stateParams.siteName});
      
      var refreshCount = function(){
          $scope.pageCount = SiteApi.getPageCount({siteName:$stateParams.siteName});
      };
+     
+     var loadSite = function(){
+         $scope.site = SiteApi.get({siteName:$stateParams.siteName});
+     };
 
      refreshCount();
+     loadSite();
      
      $scope.remove = function(){
          
@@ -53,6 +57,16 @@ myAppSites.controller('SiteDetailController', ['$scope', '$stateParams', '$state
      
      $scope.search = function(query) {
          $scope.searchResult = SiteApi.search({siteName:$scope.site.name, q: query});
+     };
+     
+     $scope.editConfig = function() {
+         $scope.editableConfig = JSON.stringify($scope.site.config);
+     };
+     
+     $scope.updateConfig = function() {
+         var config = JSON.parse($scope.editableConfig);
+         SiteApi.updateConfig({siteName:$scope.site.name}, config,
+                 loadSite);
      };
      
      $scope.refreshCount = refreshCount;
@@ -86,6 +100,7 @@ myAppSites.factory('SiteApi', ['$resource',
              {
                  registerPage: { method:'POST', url:'/api/sites/:siteName/register-page' },
                  removePages: { method:'POST', url:'/api/sites/:siteName/remove-pages' },
+                 updateConfig: { method:'POST', url:'/api/sites/:siteName/update-config' },
                  crawl: { method:'POST', url:'/api/sites/:siteName/crawl' },
                  search: { method:'GET', url:'/api/sites/:siteName/search', isArray:true },
                  getPageCount: { method:'GET', url:'/api/sites/:siteName/page-count' }
