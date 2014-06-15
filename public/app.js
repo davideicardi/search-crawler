@@ -25,8 +25,13 @@ myApp.config(['$stateProvider', '$urlRouterProvider',
       })
       .state('admin.sites', {
           url: "/sites",
-          templateUrl: "partials/sites.html",
-          controller: 'SitesController'
+          abstract: true,
+          templateUrl: "partials/sites.html"
+        })
+      .state('admin.sites.list', {
+          url: "/list",
+          templateUrl: "partials/sites-list.html",
+          controller: 'SiteListController'
         })
       .state('admin.sites.create', {
           url: "/create",
@@ -50,10 +55,12 @@ myApp.factory('httpErrorInterceptor', ['$q', '$rootScope',
             console.log('error on http inteceptor');
             
             var msg = 'Error ' + rejection.status + ': ';
-            if (rejection.data != null) {
-                msg += rejection.data.err;   
+            if (rejection.data && typeof rejection.data.message == 'string') {
+                msg += rejection.data.message;   
+            } else {
+                msg += 'unhandled error';
             }
-            $rootScope.$emit('errorNotification', msg);
+            $rootScope.$emit('notification', 'error', msg);
             
             return $q.reject(rejection);
           }
@@ -87,8 +94,8 @@ myApp.controller('notificationController', ['$scope', '$rootScope',
       $scope.notifications.splice(index, 1);  
     };
     
-    $rootScope.$on('errorNotification', function(event, message){
-        notify('error', message);
+    $rootScope.$on('notification', function(event, notificationType, message){
+        notify(notificationType, message);
     });
    }]);
 

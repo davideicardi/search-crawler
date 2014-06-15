@@ -167,6 +167,10 @@ exports.searchPages = function(expression, siteName, limit){
         limit = 20;
     }
     
+    if (typeof expression != "string") {
+        return createError("expression required");
+    }
+    
     return exports.getSite(siteName)
     .then(function(site){
         if (!site) {

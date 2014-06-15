@@ -7,20 +7,11 @@ var myAppSites = angular.module('myApp.sites', []);
 // Controllers
 /////////////////////////////////
 
-myAppSites.controller('SitesController', ['$scope', 'SiteApi',
+myAppSites.controller('SiteListController', ['$scope', 'SiteApi',
  function($scope, SiteApi) {
     
    $scope.sites = SiteApi.query();
    
-   $scope.removeSiteFromList = function(siteName){
-       var i = $scope.sites.length;
-       while (i--) {
-           if ($scope.sites[i].name == siteName) {
-               $scope.sites.splice(i, 1);
-               return;
-           }
-       }  
-   };
  }]);
 
 myAppSites.controller('SiteDetailController', ['$scope', '$stateParams', '$state', 'SiteApi',
@@ -37,10 +28,8 @@ myAppSites.controller('SiteDetailController', ['$scope', '$stateParams', '$state
      $scope.remove = function(){
          
        SiteApi.remove({siteName: $scope.site.name}, function() {
-           
-           $scope.removeSiteFromList($scope.site.name);
                    
-           $state.go("admin.sites");
+           $state.go("admin.sites.list");
        });
      };
      
@@ -49,12 +38,21 @@ myAppSites.controller('SiteDetailController', ['$scope', '$stateParams', '$state
                  refreshCount);
      };
      
+     $scope.crawl = function() {
+         SiteApi.crawl({siteName:$scope.site.name}, {},
+                 function() {$scope.$emit('notification', 'success', "Crawl in progress...");});
+     };
+     
      $scope.registerPage = function(pageUrl){
          
          SiteApi.registerPage({siteName:$scope.site.name}, {url:pageUrl},
                  refreshCount);
          
          $scope.pageToRegister = null;
+     };
+     
+     $scope.search = function(query) {
+         $scope.searchResult = SiteApi.search({siteName:$scope.site.name, q: query});
      };
      
      $scope.refreshCount = refreshCount;
@@ -71,7 +69,6 @@ myAppSites.controller('SiteCreateController', ['$scope', '$state', 'SiteApi',
          newSite.url = $scope.site.url;
          
          newSite.$save({}, function() {
-             $scope.sites.push(newSite);
              $state.go("admin.sites.detail", {siteName:newSite.name});
          });
      };
@@ -89,6 +86,8 @@ myAppSites.factory('SiteApi', ['$resource',
              {
                  registerPage: { method:'POST', url:'/api/sites/:siteName/register-page' },
                  removePages: { method:'POST', url:'/api/sites/:siteName/remove-pages' },
+                 crawl: { method:'POST', url:'/api/sites/:siteName/crawl' },
+                 search: { method:'GET', url:'/api/sites/:siteName/search', isArray:true },
                  getPageCount: { method:'GET', url:'/api/sites/:siteName/page-count' }
              });
    }]);

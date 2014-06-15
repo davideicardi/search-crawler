@@ -1,35 +1,9 @@
 
-<h4>Sites</h4>
 
 <div class="row">
-	<div class="large-6 columns">
-		<table>
-		  <thead>
-		    <tr>
-		      <th>Name</th>
-		      <th>Url</th>
-		      <th><a ui-sref="admin.sites.create" class="user-action"><i class="fi-plus"></i></a></th>
-		    </tr>
-		  </thead>
-		  <tbody>
-		    <tr ng-repeat="site in sites">
-		      <td>
-		      	<a ui-sref="admin.sites.detail({ siteName : site.name })">
-			      	{{site.name}}
-		      	</a>
-		      </td>
-		      <td><a href="{{site.url}}">{{site.url}}</a></td>
-			    <td>
-			      <a ui-sref="admin.sites.detail({ siteName : site.name })" title="detail" class="user-action"><i class="fi-pencil"></i></a>
-			    </td>      
-		    </tr>
-		  </tbody>
-		</table>
-	</div>
-
-	<div class="large-6 columns">
+	<div class="large-12 columns">
+		<h4>Sites <small>(<a ui-sref="admin.sites.list">back to list</a>)</small></h4>
+		
 		<div ui-view></div>
-	</div>	
+	</div>
 </div>
-
-

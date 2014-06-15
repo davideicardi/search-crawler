@@ -1,46 +1,88 @@
 
 <div class="row">
-	<button
-		class="button alert user-action small right" 
-		ng-click="remove()" 
-		ng-confirm-click="Delete {{site.name}}?">
-		<i class="fi-trash">	</i> Delete
-	</button>
-
-	<h4>Site: <span class="name">{{site.name}}</span></h4>
-</div>
-
-<div class="row">
-	<div class="panel clearfix">
-		<p>
-			URL: {{site.url}}
-		</p>
-		<button 
-			class="button user-action" 
-			ng-click="crawl()" 
-			ng-confirm-click="Start crawl {{site.name}}?">
-			<i class="fi-refresh">	</i> Start crawling
-		</button>
-	</div>
-</div>
-
-<div class="row">
-	<div class="panel callout clearfix">
-		<p><strong>{{pageCount.value}}</strong> pages indexed in this site</p>
-		<button 
-			class="button user-action"
-			data-reveal-id="registerSitePageModal">
-			<i class="fi-page-add">	</i> Register page
+	<div class="large-12 columns">
+		
+		<button
+			class="button alert user-action small right" 
+			ng-click="remove()" 
+			ng-confirm-click="Delete {{site.name}}?">
+			<i class="fi-trash">	</i> Delete
 		</button>
 		
-		<button 
-			class="button user-action"
-			ng-click="removeAllPages()" ng-confirm-click="Removing all {{site.name}} pages?">
-			<i class="fi-page-remove">	</i> Remove all pages
-		</button>
+		<h3>Site: <span class="name">{{site.name}}</span></h3>
 	</div>
 </div>
 
+<div class="row">
+	<div class="large-12 columns">
+		<div class="panel clearfix">
+			<p>
+				URL: {{site.url}}
+			</p>
+			<button 
+				class="button user-action" 
+				ng-click="crawl()" 
+				ng-confirm-click="Start crawling {{site.name}}?">
+				<i class="fi-refresh">	</i> Start crawling
+			</button>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="large-12 columns">
+		<div class="panel callout clearfix">
+			<p><strong>{{pageCount.value}}</strong> pages indexed in this site</p>
+			<button 
+				class="button user-action"
+				data-reveal-id="registerSitePageModal">
+				<i class="fi-page-add">	</i> Register page
+			</button>
+			
+			<button 
+				class="button user-action"
+				ng-click="removeAllPages()" ng-confirm-click="Removing all {{site.name}} pages?">
+				<i class="fi-page-remove">	</i> Remove all pages
+			</button>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="large-12 columns">
+
+		<form ng-submit="search(searchQuery)">
+			<div class="panel">
+				<h4>Search now!</h4>
+	
+					<div class="row collapse">
+						<div class="large-9 columns">
+							<input type="text" ng-model="searchQuery"  placeholder="search words" />
+						</div>
+						<div class="large-3 columns">
+							<button type="submit" class="postfix user-action" required>
+								search 
+								<i class="fi-magnifying-glass"></i>
+							</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="large-12 columns">
+							<dl>
+								<dt ng-repeat-start="result in searchResult">
+									<a href="{{result.url}}">{{result.title}}</a>
+									<br />
+									<small>{{result.url}}</small>
+								</dt>
+								<dd ng-repeat-end>{{result.description}}</dd>
+							</dl>
+						</div>
+					</div>
+			</div>
+		</form>
+		
+	</div>
+</div>
 
 
 <div id="registerSitePageModal" class="reveal-modal tiny" data-reveal>

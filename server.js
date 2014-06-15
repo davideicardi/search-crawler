@@ -20,11 +20,41 @@ app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 
 app.use(bodyParser());
+
 app.use(express.static(__dirname + '/public'));
+
+var logErrors = function (err, req, res, next) {
+    console.error(err.stack);
+    next(err);
+  };
+
+var clientErrorHandler = function (err, req, res, next) {
+    if (req.xhr) {
+      errorPage(res, err);
+    } else {
+      next(err);
+    }
+  };
+
+var errorHandler = function (err, req, res, next) {
+    errorPage(res, err);
+  };
 
 var errorPage = function(res, err){
     res.statusCode = 500;
-    res.json(err);
+    
+    var msg = 'unhandled server error';
+    if (typeof err.data == 'string'){ // schema error?
+        msg = err.data;
+    }
+    else if (typeof err.message == 'string'){ // mongo error + custom error (Error object)
+        msg = err.message;
+    }
+    else if (typeof err == 'string'){ // custom error
+        msg = err;
+    }
+    
+    res.json({message: msg});
 };
 
 
@@ -92,9 +122,9 @@ app['delete']('/api/sites/:siteName', function(req, res){
 });
 
 
-app.post('/api/crawl-site', function(req, res){
+app.post('/api/sites/:siteName/crawl', function(req, res){
 
-    var siteName = req.body.siteName;
+    var siteName = req.param("siteName");
     
     console.log("Request to crawl site " + siteName);
     
@@ -120,9 +150,6 @@ app.post('/api/crawl-site', function(req, res){
             });
             
             return true;
-        })
-        .fail(function(error){
-            console.log("Error removing pages " + error);
         });
     })
     .then(function(){
@@ -140,13 +167,17 @@ app.post('/api/sites/:siteName/register-page', function(req, res){
     
     console.log("Registering page " + url + " for site " + siteName);
 
-    crawler.getPage(url)
-    .then(function(htmlContent){
-        var page = parser.parse(htmlContent);
+    database.removePage({url:url}, siteName)
+    .then(function(){
 
-        page.url = url;
-        
-        return database.insertPage(page, siteName);
+        return crawler.getPage(url)
+        .then(function(htmlContent){
+            var page = parser.parse(htmlContent);
+    
+            page.url = url;
+            
+            return database.insertPage(page, siteName);
+        });
     })
     .then(function(result){
         res.json(result);
@@ -187,10 +218,10 @@ app.get('/api/sites/:siteName/page-count', function(req, res){
 
 // search
 
-app.get('/api/search', function(req, res){
+app.get('/api/sites/:siteName/search', function(req, res){
 
+    var siteName = req.param("siteName");
     var queryExpression = req.query.q;
-    var siteName = req.query.site;
     var limit = parseInt(req.query.limit);
     
     database.searchPages(queryExpression, siteName, limit)
@@ -203,6 +234,9 @@ app.get('/api/search', function(req, res){
 });
 
 
+app.use(logErrors);
+app.use(clientErrorHandler);
+app.use(errorHandler);
 
 
 database.init()
