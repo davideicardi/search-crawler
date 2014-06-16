@@ -43,7 +43,7 @@ exports.init = function(){
                     db, 
                     "sites", 
                     schema({
-                        name: { type: 'string', required: true, match: /^\w{3,20}$/, message: 'name is required' },
+                        name: { type: 'string', required: true, match: /^[\w_\.-]{3,20}$/, message: 'name no valid' },
                         url: { type: 'string', required: true, match: /^http.{3,}/, message: 'url must be valid' },
                         config: { contentSelector : { type: 'string', required: true, message: 'config.contentSelector is required' } }
                       }),
