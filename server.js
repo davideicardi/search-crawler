@@ -11,6 +11,7 @@ var crawler = require("./crawler.js");
 var config = require("./config.js");
 var parser = require("./parser.js");
 var database = require("./database.js");
+var errorHandling = require("./expressErrorHandling.js");
 
 var app = express();
 
@@ -22,41 +23,6 @@ app.set('view engine', 'html');
 app.use(bodyParser());
 
 app.use(express.static(__dirname + '/public'));
-
-var logErrors = function (err, req, res, next) {
-    console.error(err.stack);
-    next(err);
-  };
-
-var clientErrorHandler = function (err, req, res, next) {
-    if (req.xhr) {
-      errorPage(res, err);
-    } else {
-      next(err);
-    }
-  };
-
-var errorHandler = function (err, req, res, next) {
-    errorPage(res, err);
-  };
-
-var errorPage = function(res, err){
-    res.statusCode = 500;
-    
-    var msg = 'unhandled server error';
-    if (typeof err.data == 'string'){ // schema error?
-        msg = err.data;
-    }
-    else if (typeof err.message == 'string'){ // mongo error + custom error (Error object)
-        msg = err.message;
-    }
-    else if (typeof err == 'string'){ // custom error
-        msg = err;
-    }
-    
-    res.json({message: msg});
-};
-
 
 // home page
 app.get('/', function(req, res){
@@ -74,7 +40,7 @@ app.get('/api/sites', function(req, res){
         res.json(result);
     })
     .fail(function(error){
-        errorPage(res, error);
+        errorHandling.renderError(res, error);
     });
 });
 
@@ -88,7 +54,7 @@ app.get('/api/sites/:siteName', function(req, res){
         res.json(result);
     })
     .fail(function(error){
-        errorPage(res, error);
+        errorHandling.renderError(res, error);
     });
 });
 
@@ -104,7 +70,7 @@ app.post('/api/sites', function(req, res){
         res.json(inserted);
     })
     .fail(function(error){
-        errorPage(res, error);
+        errorHandling.renderError(res, error);
     });
 });
 
@@ -121,7 +87,7 @@ app.post('/api/sites/:siteName/update-config', function(req, res){
         res.json(updated);
     })
     .fail(function(error){
-        errorPage(res, error);
+        errorHandling.renderError(res, error);
     });
 });
 
@@ -137,7 +103,7 @@ app['delete']('/api/sites/:siteName', function(req, res){
         res.json(result);
     })
     .fail(function(error){
-        errorPage(res, error);
+        errorHandling.renderError(res, error);
     });
 });
 
@@ -157,7 +123,7 @@ app.post('/api/sites/:siteName/crawl', function(req, res){
         return database.removePages(siteName)
         .then(function(){
 
-            crawler.crawl(site.url, function(url, htmlContent){
+            crawler.crawl(site.url, site.config, function(url, htmlContent){
                 console.log("Parsing " + url);
 
                 var page = parser.parse(htmlContent, site.config);
@@ -176,7 +142,7 @@ app.post('/api/sites/:siteName/crawl', function(req, res){
         res.send('OK: Crawling in progress...');
     })
     .fail(function(error){
-        errorPage(res, error);
+        errorHandling.renderError(res, error);
     });
 });
 
@@ -211,7 +177,7 @@ app.post('/api/sites/:siteName/register-page', function(req, res){
         res.json(result);
     })
     .fail(function(error){
-        errorPage(res, error);
+        errorHandling.renderError(res, error);
     });
 });
 
@@ -227,7 +193,7 @@ app.post('/api/sites/:siteName/remove-pages', function(req, res){
         res.json(result);
     })
     .fail(function(error){
-        errorPage(res, error);
+        errorHandling.renderError(res, error);
     });
 });
 
@@ -240,7 +206,7 @@ app.get('/api/sites/:siteName/page-count', function(req, res){
         res.json({value:result});
     })
     .fail(function(error){
-        errorPage(res, error);
+        errorHandling.renderError(res, error);
     });    
 });
 
@@ -257,15 +223,11 @@ app.get('/api/sites/:siteName/search', function(req, res){
         res.json(result);
     })
     .fail(function(error){
-        errorPage(res, error);
+        errorHandling.renderError(res, error);
     });
 });
 
-
-app.use(logErrors);
-app.use(clientErrorHandler);
-app.use(errorHandler);
-
+errorHandling.init(app);
 
 database.init()
 .then(function() {

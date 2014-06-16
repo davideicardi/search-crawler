@@ -60,7 +60,7 @@ myAppSites.controller('SiteDetailController', ['$scope', '$stateParams', '$state
      };
      
      $scope.editConfig = function() {
-         $scope.editableConfig = JSON.stringify($scope.site.config);
+         $scope.editableConfig = JSON.stringify($scope.site.config, null, '\t');
      };
      
      $scope.updateConfig = function() {

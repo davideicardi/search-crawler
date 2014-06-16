@@ -16,7 +16,7 @@ var isValidContentType = function(contentType){
   return false;
 };
 
-exports.crawl = function(urlToCrawl, processPage){
+exports.crawl = function(urlToCrawl, siteConfig, processPage){
   
     var url = URI(urlToCrawl);
 
@@ -36,7 +36,18 @@ exports.crawl = function(urlToCrawl, processPage){
         
         var excludedRegExp = new RegExp("\.(" + config.crawler.excludedExtensions + ")$", "i");
         
-        return !parsedURL.uriPath.match(excludedRegExp);
+        if (parsedURL.uriPath.match(excludedRegExp)){
+            return false;
+        }
+        
+        if (siteConfig && siteConfig.urlPattern){
+            var sitePatternRegExp = new RegExp(siteConfig.urlPattern);
+            if (!parsedURL.uriPath.match(sitePatternRegExp)){
+                return false;
+            }
+        }
+        
+        return true;
     });
     
     simpleCrawlerInstance.on("crawlstart",function() {

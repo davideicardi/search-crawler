@@ -1,7 +1,7 @@
 var mongoClient = require("mongodb").MongoClient;
 var ObjectID = require("mongodb").ObjectID;
 var Q = require("q");
-
+var URI     = require("URIjs");
 var schema = require('validate');
 
 var config = require("./config.js"); 
@@ -31,6 +31,10 @@ var createError = function(err){
     return deferred.promise;  
 };
 
+var regExpEscape = function(s) {
+    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+};
+
 exports.init = function(){
     
     console.log("Connecting to mongo database...");
@@ -45,7 +49,10 @@ exports.init = function(){
                     schema({
                         name: { type: 'string', required: true, match: /^[\w_\.-]{3,20}$/, message: 'name no valid' },
                         url: { type: 'string', required: true, match: /^http.{3,}/, message: 'url must be valid' },
-                        config: { contentSelector : { type: 'string', required: true, message: 'config.contentSelector is required' } }
+                        config: { 
+                            contentSelector : { type: 'string', required: true, message: 'config.contentSelector is required' }, 
+                            urlPattern : { type: 'string', required: true, message: 'config.urlPattern is required' } 
+                        }
                       }),
                     [
                      {index: {name:1}, options: {unique:true}}
@@ -88,6 +95,11 @@ exports.insertSite = function(site){
     if (!site.config.contentSelector){
         site.config.contentSelector = config.parser.defaultContentSelector;
     }
+    if (!site.config.urlPattern){
+        var siteUrl = URI(site.url);
+        
+        site.config.urlPattern = "^" + regExpEscape(siteUrl.path());
+    }    
     
     return myDb.sites.insert(site);
 };
