@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "express": "4.3.1",
+    "morgan": "1.1.1",
     "body-parser": "1.2.0",
     "URIjs": "1.13.2",
     "simplecrawler": "0.3.8",
@@ -17,7 +18,7 @@
   "homepage": "https://github.com/davideicardi/search-crawler",
   "author": {
     "name": "Davide Icardi",
-    "email": "davide.icardi@cgiffard.com"
+    "email": "davide.icardi@gmail.com"
   },
   "keywords": [
     "search",

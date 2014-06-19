@@ -1,0 +1,14 @@
+Connecting to mongo database...
+Mongo database connected.
+search-crawler running...
+GET / 304 - - 9.408 ms
+GET /foundation-icons/foundation-icons.css 304 - - 6.537 ms
+GET /app.css 304 - - 5.976 ms
+GET /logo.png 304 - - 5.673 ms
+GET /app.sites.js 304 - - 5.673 ms
+GET /app.js 304 - - 5.568 ms
+GET /partials/admin.html 304 - - 2.824 ms
+GET /partials/sites.html 304 - - 3.140 ms
+GET /partials/sites.detail.html 304 - - 2.000 ms
+GET /api/sites/sr-201012 304 - - 4.990 ms
+GET /api/sites/sr-201012/page-count 304 - - 5.742 ms

@@ -1,14 +1,4 @@
 <div class="row">
-  <div class="large-12 columns">
-
-		<div ng-controller="notificationController">
-			<div ng-repeat="notification in notifications" class="alert-box radius"
-				ng-class="{alert: notification.type == 'error', success: notification.type == 'success'}">
-			  {{notification.message}}
-			  <a ng-click="close($index)" class="close">&times;</a>
-			</div>
-		</div>
-  </div>
   
 	<div ui-view></div>
 

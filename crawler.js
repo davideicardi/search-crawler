@@ -16,7 +16,24 @@ var isValidContentType = function(contentType){
   return false;
 };
 
-exports.crawl = function(urlToCrawl, siteConfig, processPage){
+var isValidUrl = function(parsedURL, siteConfig){
+    var excludedRegExp = new RegExp("\.(" + config.crawler.excludedExtensions + ")$", "i");
+    
+    if (parsedURL.uriPath.match(excludedRegExp)){
+        return false;
+    }
+    
+    if (siteConfig && siteConfig.urlPattern){
+        var sitePatternRegExp = new RegExp(siteConfig.urlPattern);
+        if (!parsedURL.uriPath.match(sitePatternRegExp)){
+            return false;
+        }
+    }
+    
+    return true;
+};
+
+exports.crawl = function(urlToCrawl, siteConfig, processPage, crawlingStarted, crawlingCompleted){
   
     var url = URI(urlToCrawl);
 
@@ -29,33 +46,21 @@ exports.crawl = function(urlToCrawl, siteConfig, processPage){
 
     var simpleCrawlerInstance = new SimpleCrawler(url.hostname(), url.path(), url.port() || 80);
     
-    simpleCrawlerInstance.interval = 300;
-    simpleCrawlerInstance.maxConcurrency = 1;
+    simpleCrawlerInstance.interval = config.crawler.interval;
+    simpleCrawlerInstance.maxConcurrency = config.crawler.maxConcurrency;
     
     simpleCrawlerInstance.addFetchCondition(function(parsedURL) {
-        
-        var excludedRegExp = new RegExp("\.(" + config.crawler.excludedExtensions + ")$", "i");
-        
-        if (parsedURL.uriPath.match(excludedRegExp)){
-            return false;
-        }
-        
-        if (siteConfig && siteConfig.urlPattern){
-            var sitePatternRegExp = new RegExp(siteConfig.urlPattern);
-            if (!parsedURL.uriPath.match(sitePatternRegExp)){
-                return false;
-            }
-        }
-        
-        return true;
+        return isValidUrl(parsedURL, siteConfig);
     });
     
     simpleCrawlerInstance.on("crawlstart",function() {
         console.log("Crawl starting...");
+        crawlingStarted();
     });
 
     simpleCrawlerInstance.on("complete",function() {
         console.log("Crawl finished!");
+        crawlingCompleted();
     });
 
     simpleCrawlerInstance.on("fetchcomplete",function(queueItem, responseBuffer, response){
@@ -70,13 +75,13 @@ exports.crawl = function(urlToCrawl, siteConfig, processPage){
         });
   
     simpleCrawlerInstance.on("fetcherror",function(queueItem, response){
-        console.log("Error processing " + queueItem.url);
+        console.warn("Error processing " + queueItem.url);
     });
     simpleCrawlerInstance.on("fetch404",function(queueItem, response){
-        console.log("Error 404 processing " + queueItem.url);
+        console.warn("Error 404 processing " + queueItem.url);
     });
     simpleCrawlerInstance.on("fetchclienterror",function(queueItem, errorData){
-        console.log("Error processing " + queueItem.url);
+        console.warn("Error processing " + queueItem.url);
     });
     
     simpleCrawlerInstance.start();    

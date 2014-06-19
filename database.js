@@ -49,6 +49,7 @@ exports.init = function(){
                     schema({
                         name: { type: 'string', required: true, match: /^[\w_\.-]{3,20}$/, message: 'name no valid' },
                         url: { type: 'string', required: true, match: /^http.{3,}/, message: 'url must be valid' },
+                        status: { type: 'string', required: true, match: /^[\w_\.-]{3,20}$/, message: 'status must be valid' },
                         config: { 
                             contentSelector : { type: 'string', required: true, message: 'config.contentSelector is required' }, 
                             urlPattern : { type: 'string', required: true, message: 'config.urlPattern is required' } 
@@ -92,6 +93,10 @@ exports.insertSite = function(site){
         site.config = {};
     }
     
+    if (!site.status){
+        site.status = 'ready';
+    }
+    
     if (!site.config.contentSelector){
         site.config.contentSelector = config.parser.defaultContentSelector;
     }
@@ -106,6 +111,18 @@ exports.insertSite = function(site){
 
 exports.updateSiteConfig = function(site){
     var update = {$set:{config:site.config}};
+    
+    if (typeof site._id == "string"){
+        return myDb.sites.update({ _id : ObjectID(site._id) }, update);
+    }else if (typeof site.name == "string"){
+        return myDb.sites.update({ name : site.name }, update);
+    } else {
+        return createError("Invalid site, name or _id expected.");
+    }
+};
+
+exports.updateSiteStatus = function(site){
+    var update = {$set:{status:site.status}};
     
     if (typeof site._id == "string"){
         return myDb.sites.update({ _id : ObjectID(site._id) }, update);

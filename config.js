@@ -9,6 +9,10 @@ config.web = {};
 config.crawler.excludedExtensions = "pdf|js|css|zip|docx|jpg|png|gif|woff|xml|rss";
 // List of content types to process
 config.crawler.contentTypes = ["text/html"];
+// crawler interval
+config.crawler.interval = 300;
+// crawler maxConcurrency
+config.crawler.maxConcurrency = 2;
 
 // mongo host and database
 config.db.mongo = {};

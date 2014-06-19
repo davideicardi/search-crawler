@@ -10,6 +10,7 @@
 		</button>
 		
 		<h3>Site: <span class="name">{{site.name}}</span></h3>
+		
 	</div>
 </div>
 
@@ -18,7 +19,8 @@
 		<div class="panel clearfix">
 		
 			<p>
-				URL: {{site.url}}
+				URL: {{site.url}} 
+				<span class="label round" ng-class="{success: site.status == 'ready'}">{{site.status}}</span>
 			</p>
 			
 			<button 
@@ -34,6 +36,7 @@
 				data-reveal-id="editSiteConfigModal">
 				<i class="fi-pencil">	</i> Edit Config
 			</button>
+	
 		</div>
 	</div>
 	

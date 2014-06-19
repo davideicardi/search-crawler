@@ -3,9 +3,14 @@
 // run "npm install" to install all dependencies
 // see config.js for configuration
 
+// Run server by using:
+//  node server.js
+// or to redirect console to file:
+//  node server.js >> log.txt 2>&1
+
 var express    = require('express');
 var bodyParser = require('body-parser');
-var swig = require('swig');
+var morgan  = require('morgan');
 
 var crawler = require("./crawler.js");
 var config = require("./config.js");
@@ -15,19 +20,19 @@ var errorHandling = require("./expressErrorHandling.js");
 
 var app = express();
 
+// express requests logger
+app.use(morgan('tiny')); 
+
+// express views
 app.set('views', __dirname + '/views');
 
-app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 
+// express body parser (to handle json)
 app.use(bodyParser());
 
+// express static files
 app.use(express.static(__dirname + '/public'));
-
-// home page
-app.get('/', function(req, res){
-    res.render('index', { });
-});
 
 
 // API
@@ -63,8 +68,6 @@ app.post('/api/sites', function(req, res){
 
     var site = req.body;
 
-    console.log("Creating site " + site.name + " at url " + site.url);
-
     database.insertSite(site)
     .then(function(inserted){
         res.json(inserted);
@@ -80,8 +83,6 @@ app.post('/api/sites/:siteName/update-config', function(req, res){
     var newConfig = req.body;
     var siteName = req.param("siteName");
 
-    console.log("Update site " + siteName + " config");
-
     database.updateSiteConfig({ name: siteName, config: newConfig })
     .then(function(updated){
         res.json(updated);
@@ -95,8 +96,6 @@ app.post('/api/sites/:siteName/update-config', function(req, res){
 app['delete']('/api/sites/:siteName', function(req, res){
 
     var siteName = req.param("siteName");
-
-    console.log("Removing site " + siteName);
 
     database.removeSite({name:siteName})
     .then(function(result){
@@ -112,8 +111,6 @@ app.post('/api/sites/:siteName/crawl', function(req, res){
 
     var siteName = req.param("siteName");
     
-    console.log("Request to crawl site " + siteName);
-    
     database.getSite(siteName)
     .then(function(site){
         if (!site) {
@@ -124,15 +121,19 @@ app.post('/api/sites/:siteName/crawl', function(req, res){
         .then(function(){
 
             crawler.crawl(site.url, site.config, function(url, htmlContent){
-                console.log("Parsing " + url);
-
                 var page = parser.parse(htmlContent, site.config);
                 page.url = url;
                 
                 database.insertPage(page, siteName)
                 .fail(function(error){
-                    console.log("Error inserting page " + error);
+                    console.warn("Error inserting page " + error);
                 });
+            },
+            function(){
+                database.updateSiteStatus({name:siteName, status:'crawling'});
+            },
+            function(){
+                database.updateSiteStatus({name:siteName, status:'ready'});
             });
             
             return true;
@@ -152,8 +153,6 @@ app.post('/api/sites/:siteName/register-page', function(req, res){
     var url = req.body.url;
     var siteName = req.param("siteName");
     
-    console.log("Registering page " + url + " for site " + siteName);
-
     database.getSite(siteName)
     .then(function(site){
         if (!site) {
@@ -186,8 +185,6 @@ app.post('/api/sites/:siteName/remove-pages', function(req, res){
 
     var siteName = req.param("siteName");
     
-    console.log("Removing all pages for " + siteName);
-
     return database.removePages(siteName)
     .then(function(result){
         res.json(result);
@@ -227,7 +224,10 @@ app.get('/api/sites/:siteName/search', function(req, res){
     });
 });
 
+
+
 errorHandling.init(app);
+
 
 database.init()
 .then(function() {
@@ -236,6 +236,6 @@ database.init()
     console.log("search-crawler running...");
 })
 .fail(function(error){
-    console.log(error);
+    console.error(error);
 });
 
