@@ -17,15 +17,38 @@ var isValidContentType = function(contentType){
 };
 
 var isValidUrl = function(parsedURL, siteConfig){
-    var excludedRegExp = new RegExp("\.(" + config.crawler.excludedExtensions + ")$", "i");
-    
-    if (parsedURL.uriPath.match(excludedRegExp)){
-        return false;
+
+    if (config.crawler.excludedUrlPatterns) {
+        var i;
+        for (i = 0; i < config.crawler.excludedUrlPatterns.length; i++){
+            var pattern = new RegExp(config.crawler.excludedUrlPatterns[i], "i");
+            if (pattern.test(parsedURL.uriPath)) {
+                console.log("CRAWLER: Skipping " + parsedURL.uriPath);
+                return false;
+            }
+        }
+    }
+
+    if (config.crawler.allowedUrlPatterns) {
+        var foundAllowed = false;
+        var i;
+        for (i = 0; i < config.crawler.allowedUrlPatterns.length; i++){
+            var pattern = new RegExp(config.crawler.allowedUrlPatterns[i], "i");
+            if (pattern.test(parsedURL.uriPath)) {
+                foundAllowed = true;
+            }
+        }
+
+        if (!foundAllowed){
+            console.log("CRAWLER: Skipping not allowed url " + parsedURL.uriPath);
+            return false;
+        }
     }
     
     if (siteConfig && siteConfig.urlPattern){
         var sitePatternRegExp = new RegExp(siteConfig.urlPattern);
-        if (!parsedURL.uriPath.match(sitePatternRegExp)){
+        if (!sitePatternRegExp.test(parsedURL.uriPath)) {
+            console.log("CRAWLER: Skipping not in site url " + parsedURL.uriPath);
             return false;
         }
     }

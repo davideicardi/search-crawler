@@ -5,8 +5,15 @@ config.db = {};
 config.parser = {};
 config.web = {};
 
-// Excluded extensions for crawling
-config.crawler.excludedExtensions = "pdf|js|css|zip|docx|jpg|png|gif|woff|xml|rss";
+// Excluded extensions for crawling 
+//config.crawler.excludedUrlPatterns = [
+//		"\\.(pdf|js|css|zip|docx|jpg|png|gif|woff|xml|rss)$"
+//		];
+// Allowed extension for crawling 
+config.crawler.allowedUrlPatterns = [
+		"/[^./]*$" // extension less
+		,"\\.(html|htm)$" // .html + .htm
+		];
 // List of content types to process
 config.crawler.contentTypes = ["text/html"];
 // crawler interval
