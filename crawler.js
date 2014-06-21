@@ -47,7 +47,17 @@ var isValidUrl = function(parsedURL, siteConfig){
     
     if (siteConfig && siteConfig.urlPattern){
         var sitePatternRegExp = new RegExp(siteConfig.urlPattern);
-        if (!sitePatternRegExp.test(parsedURL.uriPath)) {
+        var currentUri = new URI({
+                      protocol: parsedURL.protocol, 
+                      hostname: parsedURL.host,
+                      port: parsedURL.port.toString(),
+                      path: parsedURL.path
+                    })
+                    .normalizePort()
+                    .normalizePath();
+        
+        var currentUriString = currentUri.toString();
+        if (!sitePatternRegExp.test(currentUriString)) {
             console.log("CRAWLER: Skipping not in site url " + parsedURL.uriPath);
             return false;
         }
@@ -55,6 +65,7 @@ var isValidUrl = function(parsedURL, siteConfig){
     
     return true;
 };
+
 
 exports.crawl = function(urlToCrawl, siteConfig, processPage, crawlingStarted, crawlingCompleted){
   
@@ -71,7 +82,14 @@ exports.crawl = function(urlToCrawl, siteConfig, processPage, crawlingStarted, c
     
     simpleCrawlerInstance.interval = config.crawler.interval;
     simpleCrawlerInstance.maxConcurrency = config.crawler.maxConcurrency;
-    
+    simpleCrawlerInstance.timeout = 10 * 1000; // 10 sec
+    simpleCrawlerInstance.maxResourceSize = 1024 * 1024 * 1; // 1mb
+    // extract only anchor with href
+    simpleCrawlerInstance.discoverRegex = [
+        /(\shref\s?=\s?)([^\"\'\s>\)]+)/ig,
+        /(\shref\s?=\s?)['"]([^"']+)/ig
+    ];
+
     simpleCrawlerInstance.addFetchCondition(function(parsedURL) {
         return isValidUrl(parsedURL, siteConfig);
     });

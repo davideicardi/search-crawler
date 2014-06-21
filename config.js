@@ -12,7 +12,7 @@ config.web = {};
 // Allowed extension for crawling 
 config.crawler.allowedUrlPatterns = [
 		"/[^./]*$" // extension less
-		,"\\.(html|htm)$" // .html + .htm
+		,"\\.(html|htm|aspx|php)$" // .html + .htm
 		];
 // List of content types to process
 config.crawler.contentTypes = ["text/html"];

@@ -4,6 +4,7 @@ search-crawler
 
 ### TODO
 
+- Only search inside the site domain+port+part
 - Add authentication
 - Better text() on parser (add space between tags)
 - Search projection (strip body field)

@@ -101,9 +101,7 @@ exports.insertSite = function(site){
         site.config.contentSelector = config.parser.defaultContentSelector;
     }
     if (!site.config.urlPattern){
-        var siteUrl = URI(site.url);
-        
-        site.config.urlPattern = "^" + regExpEscape(siteUrl.path());
+        site.config.urlPattern = "^" + regExpEscape(site.url);
     }    
     
     return myDb.sites.insert(site);
