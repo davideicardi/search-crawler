@@ -1,16 +1,18 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html ng-app="myApp">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
 	<title>search-crawler</title>
-
-	<link rel="stylesheet" href="//cdn.jsdelivr.net/foundation/5.2.3/css/foundation.min.css">
+	
+	<!-- foundation cdn: //cdn.jsdelivr.net -->
+	<link rel="stylesheet" href="/foundation/5.2.3/css/foundation.min.css">
 	<link rel="stylesheet" href="/foundation-icons/foundation-icons.css">
 	
 	<link rel="stylesheet" href="/app.css">
-
-	<script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.min.js"></script>
+	
+	<!-- modernizr cdn //cdnjs.cloudflare.com/ajax/libs -->
+	<script src="/modernizr/2.8.2/modernizr.min.js"></script>
 
 </head>
 <body>
@@ -33,17 +35,17 @@
 	</div>
 
 	<div class="row">
-	  <div class="large-12 columns">
+		<div class="large-12 columns">
 			<div ng-controller="notificationController">
 				<div ng-repeat="notification in notifications" class="alert-box radius"
 					ng-class="{alert: notification.type == 'error', success: notification.type == 'success'}">
-				  {{notification.message}}
-				  <a ng-click="close($index)" class="close">&times;</a>
+					{{notification.message}}
+					<a ng-click="close($index)" class="close">&times;</a>
 				</div>
 			</div>
-	  </div>
+		</div>
 	</div>
-  
+	
 	<div ui-view>
 	</div>
 
@@ -62,18 +64,21 @@
 		</div>
 	</footer>
 
+	<!-- jquery cdn: //code.jquery.com  -->
+	<script src="/jquery/jquery-2.1.1.min.js"></script>
+	<!-- angularjs cdn: //ajax.googleapis.com/ajax/libs -->
+	<script src="/angularjs/1.2.15/angular.min.js"></script>
+	<script src="/angularjs/1.2.15/angular-resource.min.js"></script>
+	<!-- angular-ui-router cdn: //cdnjs.cloudflare.com/ajax/libs -->
+	<script src="/angular-ui-router/0.2.10/angular-ui-router.min.js"></script>
 
-	<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-resource.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js"></script>
-
-	<script src="//cdn.jsdelivr.net/foundation/5.2.3/js/foundation.min.js"></script>
+	<!-- foundation cdn: //cdn.jsdelivr.net -->
+	<script src="/foundation/5.2.3/js/foundation.min.js"></script>
 
 	<script src="/app.sites.js"></script>
 	<script src="/app.js"></script>
 	<script>
-	  $(document).foundation();
+		$(document).foundation();
 	</script>
 </body>
 </html>

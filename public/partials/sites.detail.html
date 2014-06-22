@@ -87,6 +87,7 @@
 								</dt>
 								<dd ng-repeat-end>{{result.description}}</dd>
 							</dl>
+							<p ng-if="isEmptyResult()">Sorry, no results.</p>
 						</div>
 					</div>
 			</div>
@@ -99,10 +100,10 @@
 <div id="registerSitePageModal" class="reveal-modal tiny" data-reveal>
 
 	<div class="row">
-    <div class="large-12 columns">
-    	<form ng-submit="registerPage(pageToRegister);$event.preventDefault()" onsubmit="$('#registerSitePageModal').foundation('reveal', 'close');">
-			  <h4>Register a page on <span class="name">{{site.name}}</span> site</h4>
-			  
+		<div class="large-12 columns">
+			<form ng-submit="registerPage(pageToRegister);$event.preventDefault()" onsubmit="$('#registerSitePageModal').foundation('reveal', 'close');">
+				<h4>Register a page on <span class="name">{{site.name}}</span> site</h4>
+				
 				<label>
 					<input type="url" required placeholder="page url" ng-model="pageToRegister" />
 				</label>
@@ -110,20 +111,20 @@
 				<button type="submit" class="button small">Register</button>
 				<button type="button" class="button small" 
 						onclick="$('#registerSitePageModal').foundation('reveal', 'close');">Cancel</button>
-    	</form>
-    </div>
-  </div>
+			</form>
+		</div>
+	</div>
 	
-  <a class="close-reveal-modal">&#215;</a>
+	<a class="close-reveal-modal">&#215;</a>
 </div>
 
 
 <div id="editSiteConfigModal" class="reveal-modal tiny" data-reveal>
 
 	<div class="row">
-    <div class="large-12 columns">
-    	<form ng-submit="updateConfig();$event.preventDefault()" onsubmit="$('#editSiteConfigModal').foundation('reveal', 'close');">
-			  <h4>Update <span class="name">{{site.name}}</span> site configuration</h4>
+		<div class="large-12 columns">
+			<form ng-submit="updateConfig();$event.preventDefault()" onsubmit="$('#editSiteConfigModal').foundation('reveal', 'close');">
+				<h4>Update <span class="name">{{site.name}}</span> site configuration</h4>
 
 				<label> Configuration
 					<textarea rows="10" cols="20" required ng-model="editableConfig" />
@@ -132,9 +133,9 @@
 				<button type="submit" class="button small">Update</button>
 				<button type="button" class="button small" 
 						onclick="$('#editSiteConfigModal').foundation('reveal', 'close');">Cancel</button>
-    	</form>
-    </div>
-  </div>
+			</form>
+		</div>
+	</div>
 	
-  <a class="close-reveal-modal">&#215;</a>
+	<a class="close-reveal-modal">&#215;</a>
 </div>
