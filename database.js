@@ -217,7 +217,7 @@ exports.removePages = function(siteName){
 };
 exports.searchPages = function (siteName, expression, limit) {
 		
-	if (limit < 0 || limit > 100){
+	if (!limit || limit < 0 || limit > 100 || isNaN(limit)) {
 		limit = 20;
 	}
 	
