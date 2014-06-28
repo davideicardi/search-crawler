@@ -132,14 +132,24 @@ exports.updateSiteStatus = function(site){
 		}
 };
 
-exports.removeSite = function(site){
-		if (typeof site._id === "string"){
-				return myDb.sites.remove({ _id : ObjectID(site._id) });
-		}else if (typeof site.name === "string"){
-				return myDb.sites.remove({ name : site.name });
-		} else {
-				return createError("Invalid site, name or _id expected.");
+exports.removeSite = function(siteName){
+		if (typeof siteName !== "string"){
+            return createError("Invalid site, name or _id expected.");
 		}
+		
+        return exports.getSite(siteName)
+        .then(function(site){
+                if (!site) {
+                        throw new Error("Site " + siteName + " not found");
+                }
+                
+                var siteId = site._id;
+                
+                return myDb.pages.remove({ siteId : siteId.toString() })
+                .then(function(){
+                    return myDb.sites.remove({ _id : siteId });
+                });
+        });		
 };
 exports.getSites = function(){
 		return myDb.sites.find({});

@@ -97,7 +97,7 @@ app['delete']('/api/sites/:siteName', function(req, res){
 
 		var siteName = req.param("siteName");
 
-		database.removeSite({name:siteName})
+		database.removeSite(siteName)
 		.then(function(result){
 				res.json(result);
 		})
