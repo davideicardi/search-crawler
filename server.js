@@ -11,6 +11,8 @@
 var express    = require('express');
 var bodyParser = require('body-parser');
 var morgan  = require('morgan');
+var fs = require('fs');
+var markdown = require( "markdown" ).markdown;
 
 var crawler = require("./crawler.js");
 var config = require("./config.js");
@@ -33,6 +35,16 @@ app.use(bodyParser());
 
 // express static files
 app.use(express.static(__dirname + '/public'));
+
+
+// get README.md
+app.get('/readme', function(req, res){
+    fs.readFile('README.md', {encoding: 'utf-8'}, function(err, page) {
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.write(markdown.toHTML(page));
+        res.end();
+    });
+});
 
 
 // API

@@ -18,6 +18,10 @@ myApp.config(['$stateProvider', '$urlRouterProvider',
         url: "/home",
         templateUrl: "partials/home.html"
       })
+      .state('documentation', {
+        url: "/documentation",
+        templateUrl: "partials/documentation.html"
+      })
       .state('admin', {
         url: "/admin",
         abstract: true,
