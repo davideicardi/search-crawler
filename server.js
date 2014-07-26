@@ -248,7 +248,7 @@ errorHandling.init(app);
 
 database.init()
 .then(function() {
-		app.listen(config.web.port);
+		app.listen(config.web.port, config.web.ip);
 
 		console.log("search-crawler running...");
 })

@@ -23,13 +23,16 @@ config.crawler.maxConcurrency = 2;
 
 // mongo host and database
 config.db.mongo = {};
-config.db.mongo.url = "mongodb://localhost:27017/search-crawler";
+config.db.mongo.url = "mongodb://localhost:27017/search-crawler"; // localhost
+//config.db.mongo.url = "mongodb://" + process.env.IP + ":27017/search-crawler"; //cloud9
+
 
 // html "jquery style" selector for the body content (es. "body", "article", "div#text")
 //  can be override on each site
 config.parser.defaultContentSelector = "body";
 
 // nodejs server listening port
-config.web.port = process.env.WEB_PORT || 8181;
+config.web.port = process.env.PORT || process.env.WEB_PORT || 8181;
+config.web.ip = process.env.IP;
 
 module.exports = config;
