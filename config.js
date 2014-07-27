@@ -21,10 +21,9 @@ config.crawler.interval = 300;
 // crawler maxConcurrency
 config.crawler.maxConcurrency = 2;
 
-// mongo host and database
+// mongo host and database (mongodb version => 2.6 required)
 config.db.mongo = {};
-config.db.mongo.url = "mongodb://localhost:27017/search-crawler"; // localhost
-//config.db.mongo.url = "mongodb://" + process.env.IP + ":27017/search-crawler"; //cloud9
+config.db.mongo.url = "mongodb://" + process.env.IP + ":27017/search-crawler";
 
 
 // html "jquery style" selector for the body content (es. "body", "article", "div#text")
