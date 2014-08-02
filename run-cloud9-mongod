@@ -1,1 +1,1 @@
-mongod --bind_ip=$IP --dbpath=data --nojournal --rest "$@" --setParameter textSearchEnabled=true
+mongod --bind_ip=$IP --dbpath=data --nojournal --rest "$@"
