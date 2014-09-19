@@ -17,7 +17,7 @@ var markdown = require( "markdown" ).markdown;
 var crawler = require("./crawler.js");
 var config = require("./config.js");
 var parser = require("./parser.js");
-var database = require("./database.js");
+var database = require("./database2.js");
 var errorHandling = require("./expressErrorHandling.js");
 
 var app = express();
