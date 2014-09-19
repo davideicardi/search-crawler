@@ -1,21 +1,32 @@
-var mongoose = require('mongoose');
+var mongoose = require("mongoose");
 var Q = require("q");
 
-function connect(url) {
+function connectQ(url) {
 	var deferred = Q.defer();
 
 	var connection = mongoose.connection;
-	connection.on('error', function(err) {
+	connection.on("error", function(err) {
 		deferred.reject(err);
 	});
-	connection.once('open', function () {
+	connection.once("open", function () {
 		deferred.resolve();
 	});
 
-	mongoose.connect(url)
+	mongoose.connect(url);
 
 	return deferred.promise;
 }
 
+function denodifyMethod(funcName){
+	return function(){
+		var f = Q.nfbind(this[funcName].bind(this));
+		return f.apply(arguments);
+	}
+};
 
-exports.connect = connect;
+mongoose.Model.findQ = denodifyMethod("find"); 
+mongoose.Query.prototype.findOneQ = denodifyMethod("findOne");
+
+mongoose.connectQ = connectQ;
+module.exports = mongoose;
+
