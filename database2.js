@@ -1,19 +1,11 @@
 var mongoose = require('./mongoose-q.js');
-var Schema = mongoose.Schema;
+
+
+var PageModel = require('./pageModel.js');
+var SiteModel = require('./siteModel.js');
 
 var config = require("./config.js"); 
 
-// Site Schema
-var siteSchema = new Schema({
-						name: String,
-						url: String,
-						status: String,
-						config: { 
-								contentSelector : String, 
-								urlPattern : String
-						}
-					});
-var	SiteModel = mongoose.model("Site", siteSchema, "sites");
 
 function init() {
 	console.log("Connecting to mongo database...");
@@ -24,17 +16,22 @@ function init() {
 		});
 }
 
+
 function getSites() {
-	return SiteModel.findQ();
+	return SiteModel.findAllQ();
 }
 function getSite(name) {
-	if (typeof name !== "string"){
-			throw new Error("name expected");
-	}
-	
-	return SiteModel.where({name : name}).findOneQ();
+		return SiteModel.getByNameQ(name);
 }
+function sitePageCount(siteName){
+	return SiteModel.getByNameQ(siteName)
+		.then(function(site){
+				return site.pagesCountQ();
+		});
+}
+
 
 exports.init = init;
 exports.getSites = getSites;
 exports.getSite = getSite;
+exports.sitePageCount = sitePageCount;

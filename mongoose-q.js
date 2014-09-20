@@ -24,8 +24,10 @@ function denodifyMethod(funcName){
 	}
 };
 
-mongoose.Model.findQ = denodifyMethod("find"); 
+//mongoose.Model.findQ = denodifyMethod("find"); 
+mongoose.Query.prototype.findQ = denodifyMethod("find");
 mongoose.Query.prototype.findOneQ = denodifyMethod("findOne");
+mongoose.Query.prototype.countQ = denodifyMethod("count");
 
 mongoose.connectQ = connectQ;
 module.exports = mongoose;
