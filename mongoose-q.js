@@ -19,16 +19,29 @@ function connectQ(url) {
 
 function denodifyMethod(funcName){
 	return function(){
-		var f = Q.nfbind(this[funcName].bind(this));
-		return f.apply(arguments);
+		return Q.npost(this, funcName, arguments);
 	}
 };
 
-//mongoose.Model.findQ = denodifyMethod("find"); 
+//function denodifyMethodSpread(funcName){
+//	return function(){
+//		return Q.npost(this, funcName, arguments)
+//			.spread(function (arg1){
+//				return arg1;
+//			});
+//	}
+//};
+
+// Query
 mongoose.Query.prototype.findQ = denodifyMethod("find");
 mongoose.Query.prototype.findOneQ = denodifyMethod("findOne");
 mongoose.Query.prototype.countQ = denodifyMethod("count");
+mongoose.Query.prototype.removeQ = denodifyMethod("remove");
+
+// Model
+mongoose.Model.prototype.saveQ = denodifyMethod("save");
+mongoose.Model.prototype.removeQ = denodifyMethod("remove");
+
 
 mongoose.connectQ = connectQ;
 module.exports = mongoose;
-

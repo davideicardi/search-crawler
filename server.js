@@ -78,15 +78,16 @@ app.get('/api/sites/:siteName', function(req, res){
 // Site Create
 app.post('/api/sites', function(req, res){
 
-		var site = req.body;
+	var site = req.body;
 
-		database.insertSite(site)
-		.then(function(inserted){
-				res.json(inserted);
-		})
-		.fail(function(error){
-				errorHandling.renderError(res, error);
-		});
+	database.insertSite(site)
+	.then(function(inserted){
+		console.log(inserted);
+		res.json(inserted);
+	})
+	.fail(function(error){
+		errorHandling.renderError(res, error);
+	});
 });
 
 // Site Update Config

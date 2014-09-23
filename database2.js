@@ -4,7 +4,7 @@ var mongoose = require('./mongoose-q.js');
 var PageModel = require('./pageModel.js');
 var SiteModel = require('./siteModel.js');
 
-var config = require("./config.js"); 
+var config = require("./config.js");
 
 
 function init() {
@@ -18,20 +18,38 @@ function init() {
 
 
 function getSites() {
-	return SiteModel.findAllQ();
+	return SiteModel.appFindAll();
 }
 function getSite(name) {
-		return SiteModel.getByNameQ(name);
+		return SiteModel.appGet(name);
 }
 function sitePageCount(siteName){
-	return SiteModel.getByNameQ(siteName)
+	return SiteModel.appGet(siteName)
 		.then(function(site){
-				return site.pagesCountQ();
+				return site.appCountPages();
 		});
 }
 
+function insertSite(site){
+	return SiteModel.appInsert(site);
+};
+
+exports.removeSite = function(siteName){
+	if (typeof siteName !== "string"){
+    throw new Error("Invalid site, name or _id expected.");
+	}
+	
+  return SiteModel.appGet(siteName)
+		.then(function(site){
+      return site.appDeletePages()
+		    .then(function(){
+			    return site.removeQ();
+		    });
+    });
+};
 
 exports.init = init;
 exports.getSites = getSites;
 exports.getSite = getSite;
 exports.sitePageCount = sitePageCount;
+exports.insertSite = insertSite;
