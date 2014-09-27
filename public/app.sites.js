@@ -70,7 +70,7 @@ myAppSites.controller('SiteDetailController', ['$scope', '$stateParams', '$state
 
 		 $scope.isEmptyResult = function () {
 				if ($scope.searchResult) {
-					return $scope.searchResult.length == 0;
+					return $scope.searchResult.length === 0;
 				} else {
 					return false;
 				}

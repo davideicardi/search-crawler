@@ -96,7 +96,7 @@ app.post('/api/sites/:siteName/update-config', function(req, res){
 		var newConfig = req.body;
 		var siteName = req.param("siteName");
 
-		database.updateSiteConfig({ name: siteName, config: newConfig })
+		database.updateSiteConfig(siteName, newConfig )
 		.then(function(updated){
 				res.json(updated);
 		})
@@ -174,7 +174,7 @@ app.post('/api/sites/:siteName/register-page', function(req, res){
 					throw new Error("Invalid site " + siteName);
 			} 
 				
-			return database.removePage({url:url}, siteName)
+			return database.removePage(siteName, url)
 			.then(function(){
 		
 					return crawler.getPage(url)
@@ -185,7 +185,7 @@ app.post('/api/sites/:siteName/register-page', function(req, res){
 
 							console.log("Inserting page " + url);
 
-							return database.insertPage(page, siteName);
+							return database.insertPage(siteName, page);
 					});
 			});
 	})

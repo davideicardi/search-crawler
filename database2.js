@@ -32,24 +32,52 @@ function sitePageCount(siteName){
 
 function insertSite(site){
 	return SiteModel.appInsert(site);
-};
+}
 
-exports.removeSite = function(siteName){
-	if (typeof siteName !== "string"){
-    throw new Error("Invalid site, name or _id expected.");
-	}
-	
+function updateSiteConfig(siteName, config){
+	return SiteModel.appGet(siteName)
+		.then(function(site){
+			site.config = config;
+			return site.appUpdate();
+		});
+}
+
+function removeSite(siteName){
   return SiteModel.appGet(siteName)
 		.then(function(site){
-      return site.appDeletePages()
-		    .then(function(){
-			    return site.removeQ();
-		    });
+      return site.appDelete();
     });
-};
+}
+
+function removePage(siteName, pageUrl){
+  return SiteModel.appGet(siteName)
+		.then(function(site){
+			return site.appDeletePage(pageUrl);
+		});
+}
+
+function removePages(siteName){
+  return SiteModel.appGet(siteName)
+		.then(function(site){
+			return site.appDeletePages();
+		});
+}
+
+function insertPage(siteName, page){
+  return SiteModel.appGet(siteName)
+		.then(function(site){
+			return site.appInsertPage(page);
+		});
+}
+
 
 exports.init = init;
 exports.getSites = getSites;
 exports.getSite = getSite;
 exports.sitePageCount = sitePageCount;
 exports.insertSite = insertSite;
+exports.updateSiteConfig = updateSiteConfig;
+exports.removeSite = removeSite;
+exports.removePage = removePage;
+exports.removePages = removePages;
+exports.insertPage = insertPage;

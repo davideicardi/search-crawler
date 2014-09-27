@@ -18,17 +18,54 @@ var siteSchema = new Schema({
 					
 siteSchema.methods.appCountPages = function () {
 	var siteId = this._id.toString();
-  return PageModel.where({siteId : siteId}).countQ();
+	
+  return PageModel
+  	.where({siteId : siteId})
+  	.countQ();
 };
 siteSchema.methods.appDeletePages = function () {
 	var siteId = this._id.toString();
-  return PageModel.where({siteId : siteId}).removeQ();
+  return PageModel
+  	.where({siteId : siteId})
+  	.removeQ()
+  	.spread(function (numberAffected, result){
+			return numberAffected;
+		});
+};
+siteSchema.methods.appDeletePage = function (pageUrl) {
+	var siteId = this._id.toString();
+  return PageModel
+  	.where({siteId : siteId, url: pageUrl})
+  	.removeQ()
+  	.spread(function (numberAffected, result){
+			return numberAffected;
+		});
+};
+siteSchema.methods.appInsertPage = function (page) {
+	page.siteId = this._id.toString();
+	if (!page.keywords) {
+		page.keywords = [];
+	}
+	page.keywords.push("*");
+
+	var pm = new PageModel(page);
+	return pm.saveQ()
+		.spread(function (result, numberAffected){
+			return result;
+		});
 };
 siteSchema.methods.appDelete = function () {
-  return this.appDeletePages()
+	var site = this;
+  return site.appDeletePages()
     .then(function(){
-	    return this.removeQ();
+	    return site.removeQ();
     });
+};
+siteSchema.methods.appUpdate = function () {
+	return this.saveQ()
+			.spread(function (result, numberAffected){
+				return result;
+			});
 };
 
 
