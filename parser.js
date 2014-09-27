@@ -18,7 +18,7 @@ var parseKeywords = function (metaKeywords) {
 };
 
 exports.parse = function(htmlContent, siteConfig){
-	$ = cheerio.load(htmlContent);
+	var $ = cheerio.load(htmlContent);
 		
 	var result = {};
 		

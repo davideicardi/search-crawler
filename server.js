@@ -75,6 +75,20 @@ app.get('/api/sites/:siteName', function(req, res){
 		});
 });
 
+// Site Get Pages
+app.get('/api/sites/:siteName/pages', function(req, res){
+
+		var siteName = req.param("siteName");
+		
+		database.getPages(siteName)
+		.then(function(result){
+				res.json(result);
+		})
+		.fail(function(error){
+				errorHandling.renderError(res, error);
+		});
+});
+
 // Site Create
 app.post('/api/sites', function(req, res){
 
@@ -137,16 +151,16 @@ app.post('/api/sites/:siteName/crawl', function(req, res){
 								var page = parser.parse(htmlContent, site.config);
 								page.url = url;
 								
-								database.insertPage(page, siteName)
+								database.insertPage(siteName, page)
 								.fail(function(error){
 										console.warn("Error inserting page " + error);
 								});
 						},
 						function(){
-								database.updateSiteStatus({name:siteName, status:'crawling'});
+								database.updateSiteStatus(siteName, 'crawling');
 						},
 						function(){
-								database.updateSiteStatus({name:siteName, status:'ready'});
+								database.updateSiteStatus(siteName, 'ready');
 						});
 						
 						return true;

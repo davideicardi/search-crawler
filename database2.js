@@ -29,6 +29,12 @@ function sitePageCount(siteName){
 				return site.appCountPages();
 		});
 }
+function getPages(siteName){
+	return SiteModel.appGet(siteName)
+		.then(function(site){
+				return site.appGetPages();
+		});
+}
 
 function insertSite(site){
 	return SiteModel.appInsert(site);
@@ -38,6 +44,14 @@ function updateSiteConfig(siteName, config){
 	return SiteModel.appGet(siteName)
 		.then(function(site){
 			site.config = config;
+			return site.appUpdate();
+		});
+}
+
+function updateSiteStatus(siteName, status){
+	return SiteModel.appGet(siteName)
+		.then(function(site){
+			site.status = status;
 			return site.appUpdate();
 		});
 }
@@ -77,7 +91,9 @@ exports.getSite = getSite;
 exports.sitePageCount = sitePageCount;
 exports.insertSite = insertSite;
 exports.updateSiteConfig = updateSiteConfig;
+exports.updateSiteStatus = updateSiteStatus;
 exports.removeSite = removeSite;
 exports.removePage = removePage;
 exports.removePages = removePages;
+exports.getPages = getPages;
 exports.insertPage = insertPage;

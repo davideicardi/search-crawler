@@ -32,6 +32,12 @@ siteSchema.methods.appDeletePages = function () {
 			return numberAffected;
 		});
 };
+siteSchema.methods.appGetPages = function () {
+	var siteId = this._id.toString();
+  return PageModel
+  	.where({siteId : siteId})
+  	.findQ();
+};
 siteSchema.methods.appDeletePage = function (pageUrl) {
 	var siteId = this._id.toString();
   return PageModel
