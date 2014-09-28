@@ -84,6 +84,19 @@ function insertPage(siteName, page){
 		});
 }
 
+function searchPages(siteName, expression, limit) {
+
+	if (typeof expression !== "string") {
+		throw new Error("expression required");
+	}
+
+  return SiteModel.appGet(siteName)
+		.then(function(site){
+
+			return site.appSearchPages(expression, limit);
+		}); 
+}
+
 
 exports.init = init;
 exports.getSites = getSites;
@@ -97,3 +110,4 @@ exports.removePage = removePage;
 exports.removePages = removePages;
 exports.getPages = getPages;
 exports.insertPage = insertPage;
+exports.searchPages = searchPages;

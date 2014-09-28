@@ -247,6 +247,8 @@ app.get('/api/sites/:siteName/search', function(req, res){
 	var queryExpression = req.query.q || req.query.query;
 	var limit = parseInt(req.query.l || req.query.limit);
 
+	console.log("SEARCH: Searching for '" + queryExpression + "' top " + limit + " in " + siteName);
+
 	database.searchPages(siteName, queryExpression, limit)
 	.then(function(result){
 			res.json(result);

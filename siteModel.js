@@ -38,6 +38,29 @@ siteSchema.methods.appGetPages = function () {
   	.where({siteId : siteId})
   	.findQ();
 };
+siteSchema.methods.appSearchPages = function (expression, limit) {
+	if (!limit || limit < 0 || limit > 100 || isNaN(limit)) {
+		limit = 20;
+	}
+
+	var siteId = this._id.toString();
+	var criteria = {
+		siteId: siteId,
+		$text: { $search: expression }
+	};
+	var sort = { score: { $meta: "textScore" } };
+	var projection = {
+		url: 1, title: 1, description: 1, keywords: 1, 
+		score : { $meta: "textScore" } 
+	};
+
+  return PageModel
+  	.where(criteria)
+  	.sort(sort)
+  	.limit(limit)
+  	.select(projection)
+  	.findQ();
+};
 siteSchema.methods.appDeletePage = function (pageUrl) {
 	var siteId = this._id.toString();
   return PageModel
