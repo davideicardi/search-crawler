@@ -1,20 +1,22 @@
-var mongoose = require('./mongoose-q.js');
+var mongoose = require("./mongoose-q.js");
 var Schema = mongoose.Schema;
 
-var PageModel = require('./pageModel.js');
+var PageModel = require("./pageModel.js");
 
 var config = require("./config.js");
 
 // Site Schema
 var siteSchema = new Schema({
-		name: String,
-		url: String,
-		status: String,
+		name: { type: String, required: true, match: /^[\w_\.-]{3,20}$/ },
+		url: { type: String, required: true, match: /^http.{3,}/ },
+		status: { type: String, required: true, enum: ["ready", "crawling"], default: 'ready' },
 		config: { 
-				contentSelector : String, 
-				urlPattern : String
+				contentSelector : { type: String, required: true }, 
+				urlPattern : { type: String, required: true }
 		}
 	});
+siteSchema.index({ name: 1}, { name: 'key', unique: true });
+
 					
 siteSchema.methods.appCountPages = function () {
 	var siteId = this._id.toString();
@@ -123,10 +125,6 @@ SiteModel.appFindAll = function(){
 SiteModel.appInsert = function(site){
 	if (!site.config){
 			site.config = {};
-	}
-	
-	if (!site.status){
-			site.status = 'ready';
 	}
 	
 	if (!site.config.contentSelector){
