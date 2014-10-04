@@ -1,7 +1,8 @@
 var SimpleCrawler = require("simplecrawler");
 var http = require('http');
-var URI     = require("URIjs");
+var URI = require("URIjs");
 var Q = require("q");
+
 var config = require("./config.js"); 
 
 var isValidContentType = function(contentType){

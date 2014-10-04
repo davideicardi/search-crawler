@@ -33,7 +33,7 @@ These will install in the current folder all the required libraries.
 
 After installation you can execute the node.js application by executing:
 
-    node server.js
+    node ./src/server.js
 
 server.js is the main node js application file. 
 This command execute a node.js web server that you can use to manage sites and crawling process.
@@ -42,6 +42,12 @@ By default the web server is created at port 8181, so you can open it by running
 ### Configuration
 
 ### REST API
+
+### Unit tests
+
+Run karma unit tests with the following command:
+
+    karma start karma.unit.conf.js
 
 ### TODO
 
