@@ -23,7 +23,8 @@ config.crawler.maxConcurrency = 2;
 
 // mongo host and database (mongodb version => 2.6 required)
 config.db.mongo = {};
-config.db.mongo.url = "mongodb://" + process.env.IP + ":27017/search-crawler";
+config.db.mongo.ip = process.env.IP || "localhost";
+config.db.mongo.url = "mongodb://" + config.db.mongo.ip + ":27017/search-crawler";
 
 
 // html "jquery style" selector for the body content (es. "body", "article", "div#text")
