@@ -1,6 +1,4 @@
-var crawler = require("./crawler.js");
-var parser = require("./parser.js");
-var database = require("./database2.js");
+var searchCrawler = require("./searchCrawler.js");
 var errorHandling = require("./expressErrorHandling.js");
 
 
@@ -9,41 +7,41 @@ function init(app){
     // Site List
     app.get('/api/sites', function(req, res){
     
-    		database.getSites()
-    		.then(function(result){
-    				res.json(result);
-    		})
-    		.fail(function(error){
-    				errorHandling.renderError(res, error);
-    		});
+		searchCrawler.getSites()
+		.then(function(result){
+			res.json(result);
+		})
+		.fail(function(error){
+			errorHandling.renderError(res, error);
+		});
     });
     
     // Site Get
     app.get('/api/sites/:siteName', function(req, res){
     
-    		var siteName = req.param("siteName");
-    		
-    		database.getSite(siteName)
-    		.then(function(result){
-    				res.json(result);
-    		})
-    		.fail(function(error){
-    				errorHandling.renderError(res, error);
-    		});
+		var siteName = req.param("siteName");
+		
+		searchCrawler.getSite(siteName)
+		.then(function(result){
+			res.json(result);
+		})
+		.fail(function(error){
+			errorHandling.renderError(res, error);
+		});
     });
     
     // Site Get Pages
     app.get('/api/sites/:siteName/pages', function(req, res){
     
-    		var siteName = req.param("siteName");
-    		
-    		database.getPages(siteName)
-    		.then(function(result){
-    				res.json(result);
-    		})
-    		.fail(function(error){
-    				errorHandling.renderError(res, error);
-    		});
+		var siteName = req.param("siteName");
+		
+		searchCrawler.getPages(siteName)
+		.then(function(result){
+			res.json(result);
+		})
+		.fail(function(error){
+			errorHandling.renderError(res, error);
+		});
     });
     
     // Site Create
@@ -51,7 +49,7 @@ function init(app){
     
     	var site = req.body;
     
-    	database.insertSite(site)
+    	searchCrawler.insertSite(site)
     	.then(function(inserted){
     		console.log(inserted);
     		res.json(inserted);
@@ -64,71 +62,44 @@ function init(app){
     // Site Update Config
     app.post('/api/sites/:siteName/update-config', function(req, res){
     
-    		var newConfig = req.body;
-    		var siteName = req.param("siteName");
-    
-    		database.updateSiteConfig(siteName, newConfig )
-    		.then(function(updated){
-    				res.json(updated);
-    		})
-    		.fail(function(error){
-    				errorHandling.renderError(res, error);
-    		});
+		var newConfig = req.body;
+		var siteName = req.param("siteName");
+
+		searchCrawler.updateSiteConfig(siteName, newConfig )
+		.then(function(updated){
+			res.json(updated);
+		})
+		.fail(function(error){
+			errorHandling.renderError(res, error);
+		});
     });
     
     // Site Delete
     app['delete']('/api/sites/:siteName', function(req, res){
     
-    		var siteName = req.param("siteName");
-    
-    		database.removeSite(siteName)
-    		.then(function(result){
-    				res.json(result);
-    		})
-    		.fail(function(error){
-    				errorHandling.renderError(res, error);
-    		});
+		var siteName = req.param("siteName");
+
+		searchCrawler.removeSite(siteName)
+		.then(function(result){
+			res.json(result);
+		})
+		.fail(function(error){
+			errorHandling.renderError(res, error);
+		});
     });
     
     // Site Crawl
     app.post('/api/sites/:siteName/crawl', function(req, res){
     
-    		var siteName = req.param("siteName");
-    		
-    		database.getSite(siteName)
-    		.then(function(site){
-    				if (!site) {
-    						throw new Error("Invalid site " + siteName);
-    				}
-    				
-    				return database.removePages(siteName)
-    				.then(function(){
-    
-    						crawler.crawl(site.url, site.config, function(url, htmlContent){
-    								var page = parser.parse(htmlContent, site.config);
-    								page.url = url;
-    								
-    								database.insertPage(siteName, page)
-    								.fail(function(error){
-    										console.warn("Error inserting page " + error);
-    								});
-    						},
-    						function(){
-    								database.updateSiteStatus(siteName, 'crawling');
-    						},
-    						function(){
-    								database.updateSiteStatus(siteName, 'ready');
-    						});
-    						
-    						return true;
-    				});
-    		})
-    		.then(function(){
-    				res.send('OK: Crawling in progress...');
-    		})
-    		.fail(function(error){
-    				errorHandling.renderError(res, error);
-    		});
+		var siteName = req.param("siteName");
+		
+		searchCrawler.crawlSite(siteName)
+		.then(function(){
+			res.send('OK: Crawling in progress...');
+		})
+		.fail(function(error){
+			errorHandling.renderError(res, error);
+		});
     });
     
     // Site Register Page
@@ -137,35 +108,12 @@ function init(app){
     	var url = req.body.url;
     	var siteName = req.param("siteName");
     
-    	console.log("Registering page: " + url);
-    
-    	database.getSite(siteName)
-    	.then(function(site){
-    			if (!site) {
-    					throw new Error("Invalid site " + siteName);
-    			} 
-    				
-    			return database.removePage(siteName, url)
-    			.then(function(){
-    		
-    					return crawler.getPage(url)
-    					.then(function(htmlContent){
-    							var page = parser.parse(htmlContent, site.config);
-    				
-    							page.url = url;
-    
-    							console.log("Inserting page " + url);
-    
-    							return database.insertPage(siteName, page);
-    					});
-    			});
-    	})
+    	searchCrawler.registerPage(siteName, url)
     	.then(function(result){
-    		console.log("Page registered: " + url);
     		res.json(result);
     	})
     	.fail(function(error){
-    			errorHandling.renderError(res, error);
+			errorHandling.renderError(res, error);
     	});
     });
     
@@ -174,25 +122,26 @@ function init(app){
     
     		var siteName = req.param("siteName");
     		
-    		return database.removePages(siteName)
+    		searchCrawler.removePages(siteName)
     		.then(function(result){
-    				res.json(result);
+				res.json(result);
     		})
     		.fail(function(error){
-    				errorHandling.renderError(res, error);
+				errorHandling.renderError(res, error);
     		});
     });
     
+    // Site page count
     app.get('/api/sites/:siteName/page-count', function(req, res){
     
     		var siteName = req.param("siteName");
     		
-    		database.sitePageCount(siteName)
+    		searchCrawler.sitePageCount(siteName)
     		.then(function(result){
-    				res.json({value:result});
+				res.json({value:result});
     		})
     		.fail(function(error){
-    				errorHandling.renderError(res, error);
+				errorHandling.renderError(res, error);
     		});    
     });
     
@@ -204,14 +153,12 @@ function init(app){
     	var queryExpression = req.query.q || req.query.query;
     	var limit = parseInt(req.query.l || req.query.limit);
     
-    	console.log("SEARCH: Searching for '" + queryExpression + "' top " + limit + " in " + siteName);
-    
-    	database.searchPages(siteName, queryExpression, limit)
+    	searchCrawler.searchPages(siteName, queryExpression, limit)
     	.then(function(result){
-    			res.json(result);
+			res.json(result);
     	})
     	.fail(function(error){
-    			errorHandling.renderError(res, error);
+			errorHandling.renderError(res, error);
     	});
     });
 

@@ -1,3 +1,9 @@
+// Install mocha
+// npm install -g mocha
+
+// run tests using
+// mocha ./test/e2e/
+
 // configure chai assertions
 var chai = require("chai");
 var chaiAsPromised = require("chai-as-promised");

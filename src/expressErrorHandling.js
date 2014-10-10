@@ -17,8 +17,10 @@ var errorHandler = function (err, req, res, next) {
   };
 
 var renderError = function(res, err){
+    console.error(err);
+
     res.statusCode = 500;
-    
+
     var msg = 'unhandled server error';
     if (typeof err.data == 'string'){ // schema error?
         msg = err.data;

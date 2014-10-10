@@ -4,9 +4,9 @@
 // see config.js for configuration
 
 // Run server by using:
-//  node server.js
+//  node ./src/server.js
 // or to redirect console to file:
-//  node server.js >> log.txt 2>&1
+//  node ./src/server.js >> log.txt 2>&1
 
 var express    = require("express");
 var bodyParser = require("body-parser");
@@ -15,7 +15,7 @@ var fs = require("fs");
 var markdown = require("markdown").markdown;
 
 var config = require("./config.js");
-var database = require("./database2.js");
+var searchCrawler = require("./searchCrawler.js");
 var errorHandling = require("./expressErrorHandling.js");
 
 var app = express();
@@ -53,7 +53,7 @@ require("./api.js").init(app);
 errorHandling.init(app);
 
 
-database.init()
+searchCrawler.init()
 .then(function() {
 		app.listen(config.web.port, config.web.ip);
 

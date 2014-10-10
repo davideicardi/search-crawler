@@ -1,5 +1,7 @@
 var mongoose = require('./mongoose-q.js');
 
+var crawler = require("./crawler.js");
+var parser = require("./parser.js");
 
 var PageModel = require('./pageModel.js');
 var SiteModel = require('./siteModel.js');
@@ -84,13 +86,67 @@ function insertPage(siteName, page){
 		});
 }
 
+function registerPage(siteName, pageUrl){
+
+	console.log("Registering page: " + pageUrl);
+
+    return SiteModel.appGet(siteName)
+    	.then(function(site){
+			return removePage(siteName, pageUrl)
+				.then(function(){
+						return site;
+					});
+			})
+    	.then(function(site){
+			return crawler.getPage(pageUrl)
+				.then(function(htmlContent){
+					var page = parser.parse(htmlContent, site.config);
+		
+					page.url = pageUrl;
+
+					console.log("Page " + pageUrl + " registered!");
+
+					return insertPage(siteName, page);
+				});
+			});
+
+}
+
+function crawlSite(siteName) {
+	return SiteModel.appGet(siteName)
+		.then(function(site){
+			return removePages(siteName)
+				.then(function(){
+					crawler.crawl(site.url, site.config, function(url, htmlContent){
+						var page = parser.parse(htmlContent, site.config);
+						page.url = url;
+						
+						insertPage(siteName, page)
+						.fail(function(error){
+							console.warn("Error inserting page " + error);
+						});
+					},
+					function(){
+						updateSiteStatus(siteName, 'crawling');
+					},
+					function(){
+						updateSiteStatus(siteName, 'ready');
+					});
+					
+					return true;
+				});
+		}); 
+}
+
 function searchPages(siteName, expression, limit) {
 
 	if (typeof expression !== "string") {
 		throw new Error("expression required");
 	}
 
-  return SiteModel.appGet(siteName)
+	console.log("SEARCH: Searching for '" + expression + "' limit " + limit + " in " + siteName);
+
+	return SiteModel.appGet(siteName)
 		.then(function(site){
 
 			return site.appSearchPages(expression, limit);
@@ -110,4 +166,6 @@ exports.removePage = removePage;
 exports.removePages = removePages;
 exports.getPages = getPages;
 exports.insertPage = insertPage;
+exports.registerPage = registerPage;
+exports.crawlSite = crawlSite;
 exports.searchPages = searchPages;
