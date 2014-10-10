@@ -12,7 +12,7 @@ var expect = chai.expect;
 
 var Q = require("q");
 
-
+/*
 // configure REST client
 var rest = require('rest');
 var mime = require('rest/interceptor/mime');
@@ -60,6 +60,9 @@ function api(request){
     });
 
 }
+*/
+
+var searchCrawler = require("./../../src/searchCrawler.js");
 
 function randomName()
 {
@@ -68,17 +71,17 @@ function randomName()
   return "test" + dt.toString();
 }
 
-describe("SITE.CREATE", function() {
+describe("searchCrawler", function() {
 
   var siteName = randomName();
 
-  afterEach(function(){
-    return apiDelete("/sites/" + siteName);
+  beforeEach(function(){
+    return searchCrawler.init();
   });
 
   it("Should create a site", function() {
 
-    var result = apiPost("/sites", {name:siteName, url:"http://www.google.com/"});
+    var result = searchCrawler.insertSite({name:siteName, url:"http://www.google.com/"});
 
     return Q.all([
        expect(result).to.eventually.have.property("_id"),
@@ -86,25 +89,4 @@ describe("SITE.CREATE", function() {
       ]);
   });
 
-});
-
-describe("SITE.LIST", function() {
-
-  var siteName = randomName();
-
-  beforeEach(function(){
-    return apiPost("/sites", {name:siteName, url:"http://www.google.com/"});
-  });
-  
-  afterEach(function(){
-    return apiDelete("/sites/" + siteName);
-  });
-
-  it("Should read all sites", function() {
-    
-    var result = apiGet("/sites");
-    
-    return expect(result).to.eventually.have.property("length");
-  });
-  
 });
