@@ -130,7 +130,7 @@ SiteModel.appInsert = function(site){
 	if (!site.config.contentSelector){
 			site.config.contentSelector = config.parser.defaultContentSelector;
 	}
-	if (!site.config.urlPattern){
+	if (!site.config.urlPattern && site.url){
 			site.config.urlPattern = "^" + regExpEscape(site.url);
 	}
 	
