@@ -5,7 +5,7 @@ A simple search server written in node.js and MongoDb.
 
 ### Architecture
 
-![Architecture](https://raw.githubusercontent.com/davideicardi/search-crawler/master/public/architecture.png)
+![Architecture](https://raw.githubusercontent.com/davideicardi/search-crawler/master/docs/architecture.png)
 
 Search-Crawler is composed by a Node.Js application that can crawl one or more web sites and store found pages in a MongoDb.
 It also expose a set of json based REST API that can be used to query crawled pages and integrate the result inside another application, typically the original website.
