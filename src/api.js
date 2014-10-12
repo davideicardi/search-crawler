@@ -1,3 +1,5 @@
+"use strict";
+
 var searchCrawler = require("./searchCrawler.js");
 var errorHandling = require("./expressErrorHandling.js");
 

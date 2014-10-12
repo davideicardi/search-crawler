@@ -1,3 +1,5 @@
+"use strict";
+
 var mongoose = require('./mongoose-q.js');
 var Schema = mongoose.Schema;
 

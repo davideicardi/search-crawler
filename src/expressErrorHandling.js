@@ -1,3 +1,4 @@
+"use strict";
 
 var logErrors = function (err, req, res, next) {
     console.error(err.stack);

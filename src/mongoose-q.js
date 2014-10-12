@@ -1,3 +1,5 @@
+"use strict";
+
 var mongoose = require("mongoose");
 var Q = require("q");
 
@@ -23,15 +25,6 @@ function denodifyMethod(funcName){
 	}
 };
 
-//function denodifyMethodSpread(funcName){
-//	return function(){
-//		return Q.npost(this, funcName, arguments)
-//			.spread(function (arg1){
-//				return arg1;
-//			});
-//	}
-//};
-
 // Query
 mongoose.Query.prototype.findQ = denodifyMethod("find");
 mongoose.Query.prototype.findOneQ = denodifyMethod("findOne");
@@ -44,4 +37,5 @@ mongoose.Model.prototype.removeQ = denodifyMethod("remove");
 
 
 mongoose.connectQ = connectQ;
+
 module.exports = mongoose;

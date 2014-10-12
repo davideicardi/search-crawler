@@ -1,3 +1,5 @@
+"use strict";
+
 var SimpleCrawler = require("simplecrawler");
 var http = require('http');
 var URI = require("URIjs");

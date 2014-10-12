@@ -1,3 +1,5 @@
+"use strict";
+
 // Main nodejs entry point
 
 // run "npm install" to install all dependencies

@@ -1,3 +1,5 @@
+"use strict";
+
 var cheerio = require('cheerio');
 
 var config = require("./config.js"); 
