@@ -35,9 +35,10 @@
   },
 
   "scripts": {
-    "mongod-local": "mongod --dbpath=data --nojournal",
+    "mongod": "mongod --dbpath=data --nojournal",
     "mongod-cloud9": "mongod --bind_ip=$IP --dbpath=data --nojournal",
-    "server-local": "node ./src/server.js",
+    "server": "node ./src/server.js",
+    "server-debug": "node-debug ./src/server.js",
     "test-unit": "./node_modules/karma/bin/karma start karma.unit.conf.js",
     "test-e2e": "./node_modules/mocha/bin/mocha ./test/e2e/"
   }

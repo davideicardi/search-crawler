@@ -33,9 +33,14 @@ These will install in the current folder all the required libraries.
 
 After installation you can execute the node.js application by executing:
 
-    npm run server-local
+    npm run server
 
 By default the web server is created at port 8181, so you can browse it at [http://localhost:8181](http://localhost:8181).
+
+By default Search-Crawler try to connect to a mongo database using the following url: 
+
+	mongodb://localhost:27017/search-crawler
+
 
 ### Configuration
 
@@ -43,17 +48,26 @@ See ./src/config.js
 
 ### REST API
 
+### Debugging
+
+You can debug Search-Crawler using [node inspector](https://github.com/node-inspector/node-inspector) with the following command:
+
+	npm run server-debug
+
+
 ### Unit tests
 
 Run karma unit tests with the following command:
 
     npm run test-unit
 
+
 ### End to ent tests
 
 Run mocha end to end tests with the following command:
 
     npm run test-e2e
+
 
 ### Server software stack
 
@@ -67,6 +81,7 @@ Run mocha end to end tests with the following command:
 ### References
 
 - Node.js tests: http://www.clock.co.uk/join-us#op-42180-placement-software-engineer
+- mongoose-q: https://github.com/iolo/mongoose-q/blob/master/index.js
 
 ### TODO
 
