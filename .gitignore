@@ -25,6 +25,8 @@ build/Release
 node_modules
 
 # Cloud 9 support files
-data
 .c9
+
+# mongo db data
+data
 

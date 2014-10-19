@@ -1,6 +1,6 @@
 "use strict";
 
-var mongoose = require('./mongoose-q.js');
+var mongoose = require('mongoose-promised');
 var Schema = mongoose.Schema;
 
 var pageSchema = new Schema({
