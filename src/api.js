@@ -120,7 +120,7 @@ function init(app){
     });
     
     // Site Remove Pages
-    app.post('/api/sites/:siteName/remove-pages', function(req, res){
+    app['delete']('/api/sites/:siteName/remove-pages', function(req, res){
     
     		var siteName = req.param("siteName");
     		

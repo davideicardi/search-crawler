@@ -7,12 +7,15 @@ A simple and easy to use search server written in node.js and MongoDb.
 
 ![Architecture](https://raw.githubusercontent.com/davideicardi/search-crawler/master/docs/architecture.png)
 
-Search-Crawler is composed by a Node.Js application that can crawl one or more web sites and store pages in a MongoDb.
-It also expose a set of json based REST API that can be used to query crawled pages and integrate the result inside another application, typically the original website.
+Search-Crawler is composed by a Node.Js web application to manage one or more websites and a set of json based REST API that can be used to query crawled pages and integrate the result inside any existing website.
 
-Search is powered by a full text mongodb query, see [full text index](http://docs.mongodb.org/manual/core/index-text/).
+Website crawling is implemented using [Christopher Giffard's SimpleCrawler](https://github.com/cgiffard/node-simplecrawler). Pages are stored in a MongoDb and search is powered by a full text mongodb query, see [full text index](http://docs.mongodb.org/manual/core/index-text/).
 
 ### Screenshots
+
+![site detail](https://raw.githubusercontent.com/davideicardi/search-crawler/master/docs/site-detail.png)
+
+![site list](https://raw.githubusercontent.com/davideicardi/search-crawler/master/docs/site-list.png)
 
 ### Installation
 
@@ -47,6 +50,20 @@ By default Search-Crawler try to connect to a mongo database using the following
 See ./src/config.js
 
 ### REST API
+
+Other then the user interface the following REST API are available:
+
+- GET `/api/sites` : get the list of registered sites
+- GET `/api/sites/:siteName` : get a specific site by its name
+- GET `/api/sites/:siteName/pages` : get the list of pages of a specific site
+- POST `/api/sites` : create a new site
+- POST `/api/sites/:siteName/update-config` : update a site configuration
+- DELETE `/api/sites/:siteName` : delete a specific site
+- POST `/api/sites/:siteName/crawl` : start crawling process of a specific site
+- POST `/api/sites/:siteName/register-page` : add a specific page to a site
+- DELETE `/api/sites/:siteName/remove-pages` : remove all the pages from a site
+- GET `/api/sites/:siteName/page-count` : get the registered page count of a site
+- GET `/api/sites/:siteName/search?query=:query&limit=:limit` : search for a given expression inside a site
 
 ### Debugging
 
