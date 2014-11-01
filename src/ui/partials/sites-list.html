@@ -11,14 +11,21 @@
 		  </thead>
 		  <tbody>
 		    <tr ng-repeat="site in sites">
-		      <td>
-		      	<a ui-sref="admin.sites.detail({ siteName : site.name })">
-			      	{{site.name}}
-		      	</a>
-		      </td>
-		      <td><a href="{{site.url}}">{{site.url}}</a></td>
 			    <td>
-			      <a ui-sref="admin.sites.detail({ siteName : site.name })" title="detail" class="user-action"><i class="fi-pencil"></i></a>
+			      <a ui-sref="admin.sites.detail({ siteName : site.name })" title="detail" class="user-action">
+			      	{{site.name}}
+			      </a>
+			    </td>
+			    <td>
+	      			{{site.url}}
+		      		<a href="{{site.url}}" target="_blank">
+			      		<i class="fi-eye"></i>
+		      		</a>
+		      	</td>
+			    <td>
+			      <a ui-sref="admin.sites.detail({ siteName : site.name })" title="detail" class="user-action">
+			      	<i class="fi-pencil"></i>
+			      </a>
 			    </td>      
 		    </tr>
 		  </tbody>

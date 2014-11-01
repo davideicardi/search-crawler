@@ -85,13 +85,23 @@ myApp.run(function($rootScope) {
     });
 
 
-myApp.controller('notificationController', ['$scope', '$rootScope',
-   function($scope, $rootScope) {
+myApp.controller('notificationController', ['$scope', '$rootScope', '$timeout',
+   function($scope, $rootScope, $timeout) {
     
     $scope.notifications = [];
      
     var notify = function(type, message){
-        $scope.notifications.push({type: type, message: message});
+      var id = Date.now();
+      $scope.notifications.push({id: id, type: type, message: message});
+
+      $timeout(function(){
+        for (var i = 0; i < $scope.notifications.length; i++) {
+            if ($scope.notifications[i].id == id) {
+                $scope.notifications.splice(i, 1);
+                break;
+            }
+        }
+      }, 5000);
     };
     
     $scope.close = function(index){

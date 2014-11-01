@@ -14,19 +14,32 @@ myAppSites.controller('SiteListController', ['$scope', 'SiteApi',
 	 
  }]);
 
-myAppSites.controller('SiteDetailController', ['$scope', '$stateParams', '$state', 'SiteApi',
-	 function($scope, $stateParams, $state, SiteApi) {
+myAppSites.controller('SiteDetailController', ['$scope', '$stateParams', '$state', '$timeout', 'SiteApi', 
+	 function($scope, $stateParams, $state, $timeout, SiteApi) {
 		
-		 
-		 var refreshCount = function(){
-				 $scope.pageCount = SiteApi.getPageCount({siteName:$stateParams.siteName});
-		 };
-		 
+		 var autoRefresh = function() {
+		 	if ($scope.site.status == "crawling") {
+			 	$timeout(loadSite, 1000);
+			 }
+		 };		 
+
 		 var loadSite = function(){
-				 $scope.site = SiteApi.get({siteName:$stateParams.siteName});
+			SiteApi.get({siteName:$stateParams.siteName}, {}, function(site){
+				$scope.site = site;
+				autoRefresh();
+			});
+			SiteApi.getPageCount({siteName:$stateParams.siteName}, {}, function(pageCount){
+				$scope.pageCount = pageCount;
+			});
 		 };
 
-		 refreshCount();
+		 var crawlStarted = function() {
+		 	$scope.$emit('notification', 'success', "Crawl in progress...");
+		 	$scope.site.status = "crawling";
+
+		 	autoRefresh();
+		 };
+
 		 loadSite();
 		 
 		 $scope.remove = function(){
@@ -38,45 +51,42 @@ myAppSites.controller('SiteDetailController', ['$scope', '$stateParams', '$state
 		 };
 		 
 		 $scope.removeAllPages = function() {
-				 SiteApi.removePages({siteName:$scope.site.name}, {},
-								 refreshCount);
+			 SiteApi.removePages({siteName:$scope.site.name}, {},
+							 loadSite);
 		 };
 		 
 		 $scope.crawl = function() {
-				SiteApi.crawl({siteName:$scope.site.name}, {},
-								function() {$scope.$emit('notification', 'success', "Crawl in progress...");});
+			SiteApi.crawl({siteName:$scope.site.name}, {}, crawlStarted);
 		 };
 		 
 		 $scope.registerPage = function(pageUrl){
-				SiteApi.registerPage({siteName:$scope.site.name}, {url:pageUrl},
-								refreshCount);
-				 
-				$scope.pageToRegister = null;
+			SiteApi.registerPage({siteName:$scope.site.name}, {url:pageUrl},
+							loadSite);
+			 
+			$scope.pageToRegister = null;
 		 };
 		 
 		 $scope.search = function(query) {
-				$scope.searchResult = SiteApi.search({siteName:$scope.site.name, q: query});
+			$scope.searchResult = SiteApi.search({siteName:$scope.site.name, q: query});
 		 };
 		 
 		 $scope.editConfig = function() {
-				$scope.editableConfig = JSON.stringify($scope.site.config, null, '\t');
+			$scope.editableConfig = JSON.stringify($scope.site.config, null, '\t');
 		 };
 		 
 		 $scope.updateConfig = function() {
-				var config = JSON.parse($scope.editableConfig);
-				SiteApi.updateConfig({siteName:$scope.site.name}, config,
-								loadSite);
+			var config = JSON.parse($scope.editableConfig);
+			SiteApi.updateConfig({siteName:$scope.site.name}, config,
+							loadSite);
 		 };
 
 		 $scope.isEmptyResult = function () {
-				if ($scope.searchResult) {
-					return $scope.searchResult.length === 0;
-				} else {
-					return false;
-				}
+			if ($scope.searchResult) {
+				return $scope.searchResult.length === 0;
+			} else {
+				return false;
+			}
 		 };
-		 
-		 $scope.refreshCount = refreshCount;
 	 }]);
 
 myAppSites.controller('SiteCreateController', ['$scope', '$state', 'SiteApi',
