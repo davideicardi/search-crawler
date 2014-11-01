@@ -11,6 +11,15 @@ Search-Crawler is composed by a Node.Js web application to manage one or more we
 
 Website crawling is implemented using [Christopher Giffard's SimpleCrawler](https://github.com/cgiffard/node-simplecrawler). Pages are stored in a MongoDb and search is powered by a full text mongodb query, see [full text index](http://docs.mongodb.org/manual/core/index-text/).
 
+### Features
+
+- Embedded crawler and parser
+- MongoDB powered full text search
+- Available as REST API
+- Can manage multiple websites
+- Customizable content selector (you can select which part of the page to parse)
+- Can crawl an entire domain or just a website section
+
 ### Screenshots
 
 ![site detail](https://raw.githubusercontent.com/davideicardi/search-crawler/master/docs/site-detail.png)
@@ -24,10 +33,8 @@ To install search-crawler you need the following components:
 - Node.Js (>= 0.10.28)
 - MongoDb (>= 2.6)
 
-You can install it in any operating system that support the above components, Windows, Linux or Mac.
-
-You can get the latest version of search-crawler at github. 
-To install a node.js application you can run the following command inside the folder 
+Get the latest version of search-crawler at github. 
+Install it by running the following command inside the folder 
 where you have downloaded the package:
 
     npm install
@@ -38,16 +45,45 @@ After installation you can execute the node.js application by executing:
 
     npm run server
 
-By default the web server is created at port 8181, so you can browse it at [http://localhost:8181](http://localhost:8181).
-
-By default Search-Crawler try to connect to a mongo database using the following url: 
+The web server is created at port 8181, so you can browse it at [http://localhost:8181](http://localhost:8181).
+Search-Crawler try to connect to a mongo database using the following url: 
 
 	mongodb://localhost:27017/search-crawler
 
+See Configuration section for more information.
 
 ### Configuration
 
-See ./src/config.js
+`./src/config.js` file contains all the parameters used by `search-crawler`. 
+Here some of the parameters:
+
+	// Allowed extension for crawling 
+	config.crawler.allowedUrlPatterns = [
+			"/[^./]*$" // extension less
+			,"\\.(html|htm|aspx|php)$" // .html + .htm
+			];
+	// List of content types to process
+	config.crawler.contentTypes = ["text/html"];
+	// crawler interval
+	config.crawler.interval = 300;
+	// crawler maxConcurrency
+	config.crawler.maxConcurrency = 2;
+
+	// mongo host and database (mongodb version => 2.6 required)
+	config.db.mongo = {};
+	config.db.mongo.ip = process.env.IP || "localhost";
+	config.db.mongo.url = "mongodb://" + config.db.mongo.ip + ":27017/search-crawler";
+
+
+	// html "jquery style" selector for the body content (es. "body", "article", "div#text")
+	//  can be override on each site
+	config.parser.defaultContentSelector = "body";
+
+	// nodejs server listening port
+	config.web.port = process.env.PORT || process.env.WEB_PORT || 8181;
+	config.web.ip = process.env.IP;
+
+See `./src/config.js` to see the entire parameters.
 
 ### REST API
 
