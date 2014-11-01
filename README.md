@@ -53,17 +53,66 @@ See ./src/config.js
 
 Other then the user interface the following REST API are available:
 
-- GET `/api/sites` : get the list of registered sites
-- GET `/api/sites/:siteName` : get a specific site by its name
-- GET `/api/sites/:siteName/pages` : get the list of pages of a specific site
-- POST `/api/sites` : create a new site
-- POST `/api/sites/:siteName/update-config` : update a site configuration
-- DELETE `/api/sites/:siteName` : delete a specific site
-- POST `/api/sites/:siteName/crawl` : start crawling process of a specific site
-- POST `/api/sites/:siteName/register-page` : add a specific page to a site
-- DELETE `/api/sites/:siteName/remove-pages` : remove all the pages from a site
-- GET `/api/sites/:siteName/page-count` : get the registered page count of a site
-- GET `/api/sites/:siteName/search?query=:query&limit=:limit` : search for a given expression inside a site
+#### GET `/api/sites/:siteName/search?query=:query&limit=:limit`
+
+Search for a given expression inside a site. The result is a json with the list of pages that match the query with the following format:
+
+	[
+	    {
+	        "_id": "54550c07b242a89d4c862e6e",
+	        "title": "Page Title",
+	        "description": "Page description",
+	        "url": "http://pageurl",
+	        "score": 1.5690104166666665,
+	        "keywords": [
+	            "key1",
+	            "key2"
+	        ]
+	    },
+	    {
+	    	...
+	    }
+	]
+
+#### GET `/api/sites`
+
+Get the list of registered sites
+
+#### GET `/api/sites/:siteName`
+
+Get a specific site by its name
+
+#### GET `/api/sites/:siteName/pages`
+
+Get the list of pages of a specific site
+
+#### POST `/api/sites`
+
+Create a new site
+
+#### POST `/api/sites/:siteName/update-config`
+
+Update a site configuration
+
+#### DELETE `/api/sites/:siteName`
+
+Delete a specific site
+
+#### POST `/api/sites/:siteName/crawl`
+
+Start crawling process of a specific site
+
+#### POST `/api/sites/:siteName/register-page`
+
+Add a specific page to a site
+
+#### DELETE `/api/sites/:siteName/remove-pages`
+
+Remove all the pages from a site
+
+#### GET `/api/sites/:siteName/page-count`
+
+Get the registered page count of a site
 
 ### Debugging
 
