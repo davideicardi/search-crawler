@@ -6,9 +6,11 @@
 // see config.js for configuration
 
 // Run server by using:
-//  node ./src/server.js
+//  node ./index.js
 // or to redirect console to file:
-//  node ./src/server.js >> log.txt 2>&1
+//  node ./index.js >> log.txt 2>&1
+// or to autorestarting it when something change use
+//  nodemon ./index.js
 
 var express    = require("express");
 var bodyParser = require("body-parser");
@@ -16,14 +18,14 @@ var morgan  = require("morgan");
 var fs = require("fs");
 var markdown = require("markdown").markdown;
 
-var config = require("./config.js");
-var searchCrawler = require("./searchCrawler.js");
-var errorHandling = require("./expressErrorHandling.js");
+var config = require("./src/config.js");
+var searchCrawler = require("./src/searchCrawler.js");
+var errorHandling = require("./src/expressErrorHandling.js");
 
 var app = express();
 
 // express requests logger
-app.use(morgan('tiny')); 
+app.use(morgan('tiny'));
 
 // express views
 //app.set('views', __dirname + '/views');
@@ -34,8 +36,8 @@ app.set('view engine', 'html');
 app.use(bodyParser());
 
 // express static files
-app.use(express.static(__dirname + '/ui'));
-app.use(express.static(__dirname + '/../public'));
+app.use(express.static(__dirname + '/src/ui'));
+app.use(express.static(__dirname + '/public'));
 
 
 // get README.md
@@ -49,7 +51,7 @@ app.get('/readme', function(req, res){
 
 
 // API routes
-require("./api.js").init(app);
+require("./src/api.js").init(app);
 
 
 errorHandling.init(app);
@@ -64,4 +66,3 @@ searchCrawler.init()
 .fail(function(error){
 		console.error(error);
 });
-
