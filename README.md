@@ -38,17 +38,17 @@ Get the latest version of search-crawler at github.
 Install it by running the following command inside the folder
 where you have downloaded the package:
 
-  npm install
+    npm install
 
 These will install in the current folder all the required libraries.
 
 After installation you can execute the node.js application by executing:
 
-  npm run server
+    npm run server
 
 or
 
-  node index.js
+    node index.js
 
 The web server is created at port 8181, so you can browse it at [http://localhost:8181](http://localhost:8181).
 Search-Crawler try to connect to a mongo database using the following url:
@@ -94,12 +94,12 @@ See `./src/config.js` for all available parameters.
 To create a custom configuration you can edit `config.js` file or you can create
 a custom startup file like `contoso.index.js` with a content like:
 
-  // Here I can modify configuration...
-  var config = require('./src/config.js');
-  config.web.port = 8282;
+    // Here I can modify configuration...
+    var config = require('./src/config.js');
+    config.web.port = 8282;
 
-  // then run real index.js
-  require('./index.js');
+    // then run real index.js
+    require('./index.js');
 
 And then instead of executing index.js you can execute your custom
 `contoso.index.js`. This method has the advantage that you don't modify any
