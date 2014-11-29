@@ -33,20 +33,25 @@ To install search-crawler you need the following components:
 - Node.Js (>= 0.10.28)
 - MongoDb (>= 2.6)
 
-Get the latest version of search-crawler at github. 
-Install it by running the following command inside the folder 
+
+Get the latest version of search-crawler at github.
+Install it by running the following command inside the folder
 where you have downloaded the package:
 
-    npm install
-    
+  npm install
+
 These will install in the current folder all the required libraries.
 
 After installation you can execute the node.js application by executing:
 
-    npm run server
+  npm run server
+
+or
+
+  node index.js
 
 The web server is created at port 8181, so you can browse it at [http://localhost:8181](http://localhost:8181).
-Search-Crawler try to connect to a mongo database using the following url: 
+Search-Crawler try to connect to a mongo database using the following url:
 
 	mongodb://localhost:27017/search-crawler
 
@@ -54,10 +59,10 @@ See Configuration section for more information.
 
 ### Configuration
 
-`./src/config.js` file contains all the parameters used by `search-crawler`. 
+`./src/config.js` file contains all the parameters used by `search-crawler`.
 Here some of the parameters:
 
-	// Allowed extension for crawling 
+	// Allowed extension for crawling
 	config.crawler.allowedUrlPatterns = [
 			"/[^./]*$" // extension less
 			,"\\.(html|htm|aspx|php)$" // .html + .htm
@@ -83,7 +88,23 @@ Here some of the parameters:
 	config.web.port = process.env.PORT || process.env.WEB_PORT || 8181;
 	config.web.ip = process.env.IP;
 
-See `./src/config.js` to see the entire parameters.
+
+See `./src/config.js` for all available parameters.
+
+To create a custom configuration you can edit `config.js` file or you can create
+a custom startup file like `contoso.index.js` with a content like:
+
+  // Here I can modify configuration...
+  var config = require('./src/config.js');
+  config.web.port = 8282;
+
+  // then run real index.js
+  require('./index.js');
+
+And then instead of executing index.js you can execute your custom
+`contoso.index.js`. This method has the advantage that you don't modify any
+original file.
+
 
 ### REST API
 
@@ -196,7 +217,7 @@ Run mocha end to end tests with the following command:
 
 ### License
 
-*MIT License* 
+*MIT License*
 
 Copyright (c) 2014 Davide Icardi
 
@@ -204,6 +225,3 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 
 - The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 - THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
- 
-

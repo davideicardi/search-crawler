@@ -1,7 +1,7 @@
 "use strict";
 
 // Here I can modify configuration...
-var config = require('./config.js');
+var config = require('./src/config.js');
 config.web.port = 8282;
 
 // Or execute other custom code!
