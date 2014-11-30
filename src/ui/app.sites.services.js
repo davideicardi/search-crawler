@@ -5,7 +5,7 @@ var myAppSites = angular.module('myApp.sites.services', []);
 myAppSites.factory('SiteApi', ['$resource',
 	function($resource){
 		return $resource(
-			 '/api/sites/:siteName', 
+			 '/api/sites/:siteName',
 			 { },
 			 {
 				 registerPage: { method:'POST', url:'/api/sites/:siteName/register-page' },
@@ -18,3 +18,15 @@ myAppSites.factory('SiteApi', ['$resource',
 		 });
 	}]);
 
+
+myAppSites.factory('JobApi', ['$resource',
+	function($resource){
+		return $resource(
+			'/api/jobs',
+			{
+			 },
+			{
+				load: { method:'POST', url:'/api/jobs/load', isArray:true },
+				unload: { method:'POST', url:'/api/jobs/unload', isArray:true },
+			});
+		}]);

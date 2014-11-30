@@ -16,7 +16,7 @@ var searchCrawler = require("./../../src/searchCrawler.js");
 function randomName()
 {
   var dt = new Date().valueOf();
-  
+
   return "test" + dt.toString();
 }
 
@@ -102,8 +102,8 @@ describe("searchCrawler", function() {
     it("Unknown fields will be ignored", function() {
 
       var result = searchCrawler.insertSite({
-        name:testSiteName, 
-        url:testSiteUrl, 
+        name:testSiteName,
+        url:testSiteUrl,
         invalidField:"test"
       });
 
@@ -128,7 +128,7 @@ describe("searchCrawler", function() {
     it("Name is required", function() {
 
       var result = searchCrawler.insertSite({
-        url:testSiteUrl, 
+        url:testSiteUrl,
       });
 
       return Q.all([
@@ -139,13 +139,13 @@ describe("searchCrawler", function() {
     it("Url is required", function() {
 
       var result = searchCrawler.insertSite({
-        name:testSiteName, 
+        name:testSiteName,
       });
 
       return Q.all([
          expect(result).to.eventually.be.rejected,
         ]);
-    });    
+    });
 
   });
 
@@ -268,5 +268,49 @@ describe("searchCrawler", function() {
 
   });
 
+  describe("siteJobs", function() {
+
+    beforeEach(function(){
+      return searchCrawler
+      .insertSite({name:testSiteName, url:testSiteUrl})
+      .then(function(){
+        var config = {
+          contentSelector: "body",
+          crawlingCron: "1 1 1 1 1 1",
+          urlPattern: "." }
+        return searchCrawler.updateSiteConfig(testSiteName, config);
+      });
+    });
+
+    it("Should load jobs", function() {
+
+      var result = searchCrawler.loadJobs();
+
+      var item = result.then(function(r){
+        return r.filter(function(j){
+          return j.siteName == testSiteName;
+        })[0];
+      });
+
+      return Q.all([
+        expect(result).to.eventually.have.length.above(0),
+        expect(item).to.eventually.exist,
+        expect(item).to.eventually.have.property("cronExpression", "1 1 1 1 1 1"),
+        ]);
+      });
+
+    it("Should unload jobs", function() {
+
+      var result = searchCrawler.unloadJobs();
+
+      return Q.all([
+          expect(result).to.eventually.have.property("length", 0),
+        ]);
+    });
+
+    afterEach(function(){
+      return searchCrawler.removeSite(testSiteName);
+    });
+  });
 
 });

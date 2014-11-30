@@ -12,17 +12,18 @@ var siteSchema = new Schema({
 		name: { type: String, required: true, match: /^[\w_\.-]{3,20}$/ },
 		url: { type: String, required: true, match: /^http.{3,}/ },
 		status: { type: String, required: true, enum: ["ready", "crawling"], default: 'ready' },
-		config: { 
-				contentSelector : { type: String, required: true }, 
-				urlPattern : { type: String, required: true }
+		config: {
+				contentSelector : { type: String, required: true },
+				urlPattern : { type: String, required: true },
+				crawlingCron : { type: String, required: false }
 		}
 	});
 siteSchema.index({ name: 1}, { name: 'key', unique: true });
 
-					
+
 siteSchema.methods.appCountPages = function () {
 	var siteId = this._id.toString();
-	
+
   return PageModel
   	.where({siteId : siteId})
   	.countQ();
@@ -54,8 +55,8 @@ siteSchema.methods.appSearchPages = function (expression, limit) {
 	};
 	var sort = { score: { $meta: "textScore" } };
 	var projection = {
-		url: 1, title: 1, description: 1, keywords: 1, 
-		score : { $meta: "textScore" } 
+		url: 1, title: 1, description: 1, keywords: 1,
+		score : { $meta: "textScore" }
 	};
 
   return PageModel
@@ -109,7 +110,7 @@ SiteModel.appGet = function(name){
 	if (typeof name !== "string"){
 			throw new Error("name expected");
 	}
-	
+
 	return SiteModel
 		.where({name : name})
 		.findOneQ()
@@ -117,7 +118,7 @@ SiteModel.appGet = function(name){
 				if (!site) {
 						throw new Error("Site '" + name + "' not found");
 				}
-		
+
 				return site;
 		});
 };
@@ -126,16 +127,16 @@ SiteModel.appFindAll = function(){
 };
 SiteModel.appInsert = function(site){
 	if (!site.config){
-			site.config = {};
+			site.config = { crawlingCron: null };
 	}
-	
+
 	if (!site.config.contentSelector){
 			site.config.contentSelector = config.parser.defaultContentSelector;
 	}
 	if (!site.config.urlPattern && site.url){
 			site.config.urlPattern = "^" + regExpEscape(site.url);
 	}
-	
+
 	var sm = new SiteModel(site);
 	return sm.saveQ()
 		.spread(function (result, numberAffected){

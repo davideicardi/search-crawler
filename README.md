@@ -19,6 +19,7 @@ Website crawling is implemented using [Christopher Giffard's SimpleCrawler](http
 - Can manage multiple websites
 - Customizable content selector (you can select which part of the page to parse)
 - Can crawl an entire domain or just a website section
+- Scheduled crawling with cron syntax (using https://github.com/ncb000gt/node-cron)
 
 ### Screenshots
 
@@ -104,6 +105,31 @@ a custom startup file like `contoso.index.js` with a content like:
 And then instead of executing index.js you can execute your custom
 `contoso.index.js`. This method has the advantage that you don't modify any
 original file.
+
+Each website has also it's own configuration
+ (stored in mongodb inside each site document):
+
+- site.config.contentSelector - the HTML selector that must be used for text search
+- site.config.urlPattern - regex pattern that urls must match
+- site.config.crawlingCron - (optional) cron expression to controll the scheduled crawling
+
+These configuration can be edited using the web application or through the API.
+
+### Scheduled crawling
+
+To configure automatic crawling of website you should set the `crawlingCron`
+configuration with your required frequency specified as a cron expression.
+Below a quick CRON guide.
+
+Remember that to apply any changed in the cron scheduled expression
+you have to reload jobs using the appropriate command or restart the node application.
+
+#### CRON Quick guide
+
+- `* * * * * *` = every seconds<br/>
+- `0 * * * * *` = every minutes at second 0<br/>
+- `0 5 * * * *` = every hours at minute 5<br/>
+- `0 0 1 * * *` = every days at 1 AM
 
 
 ### REST API

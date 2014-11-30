@@ -1,8 +1,9 @@
 
 <div class="row">
-	<div class="large-12 columns">
+	<div class="large-6 columns">
 		<table>
-		  <thead>
+			<caption>Sites</caption>
+			<thead>
 		    <tr>
 		      <th>Name</th>
 		      <th>Url</th>
@@ -26,11 +27,47 @@
 			      <a ui-sref="admin.sites.detail({ siteName : site.name })" title="detail" class="user-action">
 			      	<i class="fi-pencil"></i>
 			      </a>
-			    </td>      
+			    </td>
 		    </tr>
 		  </tbody>
 		</table>
 	</div>
+
+	<div class="large-6 columns">
+		<table>
+			<caption>
+				Jobs
+
+				<span class="right">
+					<a
+						ng-click="loadJobs()" >
+						<i class="fi-refresh">	</i> Load
+					</a>
+					&nbsp;
+					<a
+						ng-click="unloadJobs()" >
+						<i class="fi-trash">	</i> Unload
+					</a>
+
+				</span>
+			</caption>
+			<thead>
+				<tr>
+					<th>Site</th>
+					<th>Cron Scheduling</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="job in jobs">
+					<td>
+						{{job.siteName}}
+					</td>
+					<td>
+						{{job.cronExpression}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
 </div>
-
-

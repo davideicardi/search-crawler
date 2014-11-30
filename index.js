@@ -59,6 +59,7 @@ errorHandling.init(app);
 
 searchCrawler.init()
 .then(function() {
+
 		app.listen(config.web.port, config.web.ip);
 
 		console.log("search-crawler running...");

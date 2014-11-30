@@ -1,70 +1,68 @@
 
 <div class="row">
 	<div class="large-12 columns">
-		
+
 		<button
-			class="button alert user-action small right" 
-			ng-click="remove()" 
+			class="button alert user-action small right"
+			ng-click="remove()"
 			ng-confirm-click="Delete {{site.name}}?">
 			<i class="fi-trash">	</i> Delete
 		</button>
-		
+
 		<h3>Site: <span class="name">{{site.name}}</span></h3>
-		
+
 	</div>
 </div>
 
 <div class="row">
 	<div class="large-6 columns">
 		<div class="panel clearfix">
-		
+
 			<p>
-				URL: {{site.url}} 
+				URL: {{site.url}}
 	      		<a href="{{site.url}}" target="_blank">
 		      		<i class="fi-eye"></i>
 	      		</a>
-
-
 			</p>
 
 			<p>
 				Status:
-				<span 
-				class="label round" 
+				<span
+				class="label round"
 				ng-class="{secondary: site.status == 'ready', success: site.status == 'crawling'}">
 					{{site.status}}
 				</span>
 				<img src="/images/loader.gif" ng-if="site.status == 'crawling'" />
 			</p>
-			
-			<button 
-				class="button user-action small" 
-				ng-click="crawl()" 
+
+			<button
+				class="button user-action small"
+				ng-click="crawl()"
 				ng-disabled="site.status == 'crawling'"
 				ng-confirm-click="Start crawling {{site.name}}?">
 				<i class="fi-refresh">	</i> Start crawling
 			</button>
 
-			<button 
+			<button
 				class="button user-action small"
 				ng-click="editConfig()"
 				data-reveal-id="editSiteConfigModal">
 				<i class="fi-pencil">	</i> Edit Config
 			</button>
-	
+
 		</div>
 	</div>
-	
+
 	<div class="large-6 columns">
 		<div class="panel clearfix">
 			<p><strong>{{pageCount.value}}</strong> pages indexed in this site</p>
-			<button 
+			<button
 				class="button user-action small"
 				data-reveal-id="registerSitePageModal">
 				<i class="fi-page-add">	</i> Register page
 			</button>
-			
-			<button 
+
+			<button
 				class="button user-action small"
 				ng-click="removeAllPages()" ng-confirm-click="Removing all {{site.name}} pages?">
 				<i class="fi-page-remove">	</i> Remove all pages
@@ -80,14 +78,14 @@
 		<form ng-submit="search(searchQuery)">
 			<div class="panel">
 				<h4>Search now!</h4>
-	
+
 					<div class="row collapse">
 						<div class="large-9 columns">
 							<input type="text" ng-model="searchQuery"  placeholder="search words" />
 						</div>
 						<div class="large-3 columns">
 							<button type="submit" class="postfix user-action" required>
-								search 
+								search
 								<i class="fi-magnifying-glass"></i>
 							</button>
 						</div>
@@ -107,7 +105,7 @@
 					</div>
 			</div>
 		</form>
-		
+
 	</div>
 </div>
 
@@ -118,18 +116,18 @@
 		<div class="large-12 columns">
 			<form ng-submit="registerPage(pageToRegister);$event.preventDefault()" onsubmit="$('#registerSitePageModal').foundation('reveal', 'close');">
 				<h4>Register a page on <span class="name">{{site.name}}</span> site</h4>
-				
+
 				<label>
 					<input type="url" required placeholder="page url" ng-model="pageToRegister" />
 				</label>
-				
+
 				<button type="submit" class="button small">Register</button>
-				<button type="button" class="button small" 
+				<button type="button" class="button small"
 						onclick="$('#registerSitePageModal').foundation('reveal', 'close');">Cancel</button>
 			</form>
 		</div>
 	</div>
-	
+
 	<a class="close-reveal-modal">&#215;</a>
 </div>
 
@@ -141,16 +139,32 @@
 			<form ng-submit="updateConfig();$event.preventDefault()" onsubmit="$('#editSiteConfigModal').foundation('reveal', 'close');">
 				<h4>Update <span class="name">{{site.name}}</span> site configuration</h4>
 
-				<label> Configuration
-					<textarea rows="10" cols="20" required ng-model="editableConfig" />
+				<label> Content Selector
+					<input type="text" required placeholder="es. body" ng-model="editableConfig.contentSelector" />
 				</label>
-				
+				<label> Url Pattern
+					<input type="text" required placeholder="es. ^http.*$" ng-model="editableConfig.urlPattern" />
+				</label>
+				<label> Content Selector
+					<input type="text" placeholder="es. 0 0 * * * *" ng-model="editableConfig.crawlingCron" />
+				</label>
+
+				<div class="panel callout radius">
+					<h5>CRON syntax quick guide</h5>
+					<p>
+						<code>* * * * * *</code> = every seconds<br/>
+						<code>0 * * * * *</code> = every minutes at second 0<br/>
+						<code>0 5 * * * *</code> = every hours at minute 5<br/>
+						<code>0 0 1 * * *</code> = every days at 1 AM
+					</p>
+				</div>
+
 				<button type="submit" class="button small">Update</button>
-				<button type="button" class="button small" 
+				<button type="button" class="button small"
 						onclick="$('#editSiteConfigModal').foundation('reveal', 'close');">Cancel</button>
 			</form>
 		</div>
 	</div>
-	
+
 	<a class="close-reveal-modal">&#215;</a>
 </div>
