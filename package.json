@@ -1,8 +1,7 @@
 {
   "name": "search-crawler",
   "description": "search-crawler experimental app",
-  "version": "0.0.1",
-  "private": true,
+  "version": "1.0.0",
   "homepage": "https://github.com/davideicardi/search-crawler",
   "author": {
     "name": "Davide Icardi",
@@ -12,6 +11,7 @@
     "search",
     "crawler"
   ],
+  "main":"./inde.js"
   "license": "MIT",
   "dependencies": {
     "express": "4.3.1",
