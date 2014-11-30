@@ -197,6 +197,19 @@ Remove all the pages from a site
 
 Get the registered page count of a site
 
+#### GET `/api/jobs
+
+Get all the configured jobs
+
+#### POST `/api/jobs/load`
+
+Load all the available jobs
+
+#### POST `/api/jobs/unload
+
+Unload and stop all the jobs
+
+
 ### Debugging
 
 You can debug Search-Crawler using [node inspector](https://github.com/node-inspector/node-inspector) with the following command:
