@@ -1,13 +1,14 @@
 
 <div class="row">
-	<div class="large-6 columns">
+	<div class="large-8 columns">
 		<table>
 			<caption>Sites</caption>
 			<thead>
 		    <tr>
 		      <th>Name</th>
 		      <th>Url</th>
-		      <th><a ui-sref="admin.sites.create" class="user-action"><i class="fi-plus"></i></a></th>
+					<th>Last crawled</th>
+					<th><a ui-sref="admin.sites.create" class="user-action"><i class="fi-plus"></i></a></th>
 		    </tr>
 		  </thead>
 		  <tbody>
@@ -18,11 +19,14 @@
 			      </a>
 			    </td>
 			    <td>
-	      			{{site.url}}
-		      		<a href="{{site.url}}" target="_blank">
-			      		<i class="fi-eye"></i>
-		      		</a>
-		      	</td>
+      			{{site.url}}
+	      		<a href="{{site.url}}" target="_blank">
+		      		<i class="fi-eye"></i>
+	      		</a>
+	      	</td>
+					<td>
+						{{site.lastCrawled}}
+					</td>
 			    <td>
 			      <a ui-sref="admin.sites.detail({ siteName : site.name })" title="detail" class="user-action">
 			      	<i class="fi-pencil"></i>
@@ -33,7 +37,7 @@
 		</table>
 	</div>
 
-	<div class="large-6 columns">
+	<div class="large-4 columns">
 		<table>
 			<caption>
 				Jobs

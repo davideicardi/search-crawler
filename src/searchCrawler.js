@@ -56,10 +56,13 @@ function updateSiteConfig(siteName, config){
 		});
 }
 
-function updateSiteStatus(siteName, status){
+function updateSiteStatus(siteName, status, lastCrawled){
 	return SiteModel.appGet(siteName)
 		.then(function(site){
 			site.status = status;
+			if (lastCrawled){
+				site.lastCrawled = lastCrawled;
+			}
 			return site.appUpdate();
 		});
 }
@@ -136,7 +139,7 @@ function crawlSite(siteName) {
 						updateSiteStatus(siteName, 'crawling');
 					},
 					function(){
-						updateSiteStatus(siteName, 'ready');
+						updateSiteStatus(siteName, 'ready', Date.now());
 					});
 
 					return true;

@@ -25,7 +25,9 @@ var errorHandling = require("./src/expressErrorHandling.js");
 var app = express();
 
 // express requests logger
-app.use(morgan('tiny'));
+if (config.web.logRequests){
+  app.use(morgan('tiny'));
+}
 
 // express views
 //app.set('views', __dirname + '/views');

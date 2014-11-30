@@ -37,4 +37,6 @@ config.parser.defaultContentSelector = "body";
 config.web.port = process.env.PORT || process.env.WEB_PORT || 8181;
 config.web.ip = process.env.IP;
 
+config.web.logRequests = false;
+
 module.exports = config;

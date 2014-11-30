@@ -12,6 +12,7 @@ var siteSchema = new Schema({
 		name: { type: String, required: true, match: /^[\w_\.-]{3,20}$/ },
 		url: { type: String, required: true, match: /^http.{3,}/ },
 		status: { type: String, required: true, enum: ["ready", "crawling"], default: 'ready' },
+		lastCrawled: { type: Date, required: false },
 		config: {
 				contentSelector : { type: String, required: true },
 				urlPattern : { type: String, required: true },
