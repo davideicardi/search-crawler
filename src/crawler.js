@@ -85,8 +85,8 @@ exports.crawl = function(urlToCrawl, siteConfig, processPage, crawlingStarted, c
     
     simpleCrawlerInstance.interval = config.crawler.interval;
     simpleCrawlerInstance.maxConcurrency = config.crawler.maxConcurrency;
-    simpleCrawlerInstance.timeout = 10 * 1000; // 10 sec
-    simpleCrawlerInstance.maxResourceSize = 1024 * 1024 * 1; // 1mb
+    simpleCrawlerInstance.timeout = config.crawler.timeout;
+    simpleCrawlerInstance.maxResourceSize = config.crawler.maxResourceSize;
     // extract only anchor with href
     simpleCrawlerInstance.discoverRegex = [
         /(\shref\s?=\s?)([^\"\'\s>\)]+)/ig,
