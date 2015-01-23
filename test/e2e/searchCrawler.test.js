@@ -207,7 +207,7 @@ describe("searchCrawler", function() {
       return Q.all([
          expect(result).to.eventually.have.property("_id"),
          expect(result).to.eventually.have.property("url", "http://nodejs.org/"),
-         expect(result).to.eventually.have.property("title", "node.js"),
+         expect(result).to.eventually.have.property("title", "Node.js"),
         ]);
     });
 
@@ -249,7 +249,7 @@ describe("searchCrawler", function() {
 
       return Q.all([
          expect(item).to.eventually.have.property("url", "http://nodejs.org/"),
-         expect(item).to.eventually.have.property("title", "node.js"),
+         expect(item).to.eventually.have.property("title", "Node.js"),
         ]);
     });
 

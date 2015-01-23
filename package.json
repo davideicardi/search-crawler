@@ -11,7 +11,7 @@
     "search",
     "crawler"
   ],
-  "main":"./inde.js",
+  "main":"./index.js",
   "license": "MIT",
   "dependencies": {
     "express": "4.3.1",
