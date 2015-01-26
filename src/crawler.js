@@ -88,6 +88,7 @@ exports.crawl = function(urlToCrawl, siteConfig, processPage, crawlingStarted, c
     simpleCrawlerInstance.timeout = config.crawler.timeout;
     simpleCrawlerInstance.maxResourceSize = config.crawler.maxResourceSize;
     simpleCrawlerInstance.customHeaders = config.crawler.customHeaders;
+	simpleCrawlerInstance.acceptCookies = config.crawler.acceptCookies;
     
     // extract only anchor with href
     simpleCrawlerInstance.discoverRegex = [
@@ -146,7 +147,8 @@ exports.getPage = function(pageUrl){
     var options = {
             host: url.hostname(),
             path: url.path(),
-            port: url.port() || 80
+            port: url.port() || 80,
+            headers: config.crawler.customHeaders
           };
 
     var deferred = Q.defer();

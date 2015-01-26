@@ -25,6 +25,7 @@ config.crawler.maxConcurrency = 2;
 config.crawler.timeout = 20 * 1000; // 20 sec
 config.crawler.maxResourceSize = 1024 * 1024 * 1; // 1mb
 config.crawler.customHeaders = {}; // { "Authorization" : "secret" };
+config.crawler.acceptCookies = false;
 
 // mongo host and database (mongodb version => 2.6 required)
 config.db.mongo = {};
