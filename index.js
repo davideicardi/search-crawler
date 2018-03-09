@@ -62,10 +62,10 @@ errorHandling.init(app);
 searchCrawler.init()
 .then(function() {
 
-		app.listen(config.web.port, config.web.ip);
+    app.listen(config.web.port, config.web.ip);
 
-		console.log("search-crawler running...");
+    console.log("search-crawler running...");
 })
-.fail(function(error){
-		console.error(error);
+.catch(function(error){
+    console.error(error);
 });

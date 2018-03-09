@@ -3,7 +3,6 @@
 var SimpleCrawler = require("simplecrawler");
 var http = require('http');
 var URI = require("URIjs");
-var Q = require("q");
 
 var config = require("./config.js"); 
 
@@ -151,21 +150,19 @@ exports.getPage = function(pageUrl){
             headers: config.crawler.customHeaders
           };
 
-    var deferred = Q.defer();
-    
-    var callback = function(response) {
-        var buffer = '';
-    
-        response.on('data', function (chunk) {
-            buffer += chunk;
-        });
-    
-        response.on('end', function () {
-            deferred.resolve(buffer);
-        });
-      };
-    
-    http.request(options, callback).end();
-
-    return deferred.promise;
+    return new Promise(function(resolve, reject) {
+        var callback = function(response) {
+            var buffer = '';
+        
+            response.on('data', function (chunk) {
+                buffer += chunk;
+            });
+        
+            response.on('end', function () {
+                resolve(buffer);
+            });
+        };
+        
+        http.request(options, callback).end();
+    });
 };

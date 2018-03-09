@@ -11,7 +11,7 @@
     "search",
     "crawler"
   ],
-  "main":"./index.js",
+  "main": "./index.js",
   "license": "MIT",
   "dependencies": {
     "express": "4.3.1",
@@ -20,27 +20,24 @@
     "URIjs": "1.13.2",
     "simplecrawler": "0.3.8",
     "cheerio": "0.16.0",
-    "q": "1.0.1",
     "markdown": "0.5.0",
-    "mongoose": "3.8.16",
-    "mongoose-promised": "0.1.0",
+    "mongoose": "5.0.9",
     "nodemon": "~1.2.1",
     "cron": "~1.0.5"
   },
   "devDependencies": {
-    "chai": "^1.9.2",
-    "chai-as-promised": "^4.1.1",
-    "karma": "^0.12.24",
-    "karma-jasmine": "^0.1.5",
-    "karma-phantomjs-launcher": "^0.1.4",
-    "mocha": "^1.21.4"
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^5.0.4"
   },
   "scripts": {
     "mongod": "mongod --dbpath=data --nojournal",
     "mongod-cloud9": "mongod --bind_ip=$IP --dbpath=data --nojournal",
     "server": "nodemon ./index.js",
     "server-debug": "node-debug ./index.js",
-    "test-unit": "./node_modules/karma/bin/karma start karma.unit.conf.js",
-    "test-e2e": "./node_modules/mocha/bin/mocha ./test/e2e/"
+    "test-e2e": "mocha ./test/e2e/"
+  },
+  "engines": {
+    "node": ">=8.9.0"
   }
 }

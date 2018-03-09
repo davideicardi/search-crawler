@@ -13,7 +13,7 @@ function init(app){
   		.then(function(result){
   			res.json(result);
   		})
-  		.fail(function(error){
+  		.catch(function(error){
   			errorHandling.renderError(res, error);
   		});
     });
@@ -27,7 +27,7 @@ function init(app){
   		.then(function(result){
   			res.json(result);
   		})
-  		.fail(function(error){
+  		.catch(function(error){
   			errorHandling.renderError(res, error);
   		});
     });
@@ -39,7 +39,7 @@ function init(app){
       .then(function(result){
         res.json(result);
       })
-      .fail(function(error){
+      .catch(function(error){
         errorHandling.renderError(res, error);
       });
     });
@@ -51,7 +51,7 @@ function init(app){
       .then(function(result){
         res.json(result);
       })
-      .fail(function(error){
+      .catch(function(error){
         errorHandling.renderError(res, error);
       });
     });
@@ -63,7 +63,7 @@ function init(app){
       .then(function(result){
         res.json(result);
       })
-      .fail(function(error){
+      .catch(function(error){
         errorHandling.renderError(res, error);
       });
     });
@@ -77,7 +77,7 @@ function init(app){
   		.then(function(result){
   			res.json(result);
   		})
-  		.fail(function(error){
+  		.catch(function(error){
   			errorHandling.renderError(res, error);
   		});
     });
@@ -92,7 +92,7 @@ function init(app){
     		console.log(inserted);
     		res.json(inserted);
     	})
-    	.fail(function(error){
+    	.catch(function(error){
     		errorHandling.renderError(res, error);
     	});
     });
@@ -107,7 +107,7 @@ function init(app){
 		.then(function(updated){
 			res.json(updated);
 		})
-		.fail(function(error){
+		.catch(function(error){
 			errorHandling.renderError(res, error);
 		});
     });
@@ -121,7 +121,7 @@ function init(app){
 		.then(function(result){
 			res.json(result);
 		})
-		.fail(function(error){
+		.catch(function(error){
 			errorHandling.renderError(res, error);
 		});
     });
@@ -135,7 +135,7 @@ function init(app){
 		.then(function(){
 			res.send('OK: Crawling in progress...');
 		})
-		.fail(function(error){
+		.catch(function(error){
 			errorHandling.renderError(res, error);
 		});
     });
@@ -150,7 +150,7 @@ function init(app){
     	.then(function(result){
     		res.json(result);
     	})
-    	.fail(function(error){
+    	.catch(function(error){
 			errorHandling.renderError(res, error);
     	});
     });
@@ -164,7 +164,7 @@ function init(app){
     		.then(function(result){
 				res.json(result);
     		})
-    		.fail(function(error){
+    		.catch(function(error){
 				errorHandling.renderError(res, error);
     		});
     });
@@ -178,7 +178,7 @@ function init(app){
     		.then(function(result){
 				res.json({value:result});
     		})
-    		.fail(function(error){
+    		.catch(function(error){
 				errorHandling.renderError(res, error);
     		});
     });
@@ -195,7 +195,7 @@ function init(app){
     	.then(function(result){
 			res.json(result);
     	})
-    	.fail(function(error){
+    	.catch(function(error){
 			errorHandling.renderError(res, error);
     	});
     });

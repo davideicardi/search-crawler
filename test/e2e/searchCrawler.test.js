@@ -9,8 +9,6 @@ var chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 var expect = chai.expect;
 
-var Q = require("q");
-
 var searchCrawler = require("./../../src/searchCrawler.js");
 
 function randomName()
@@ -63,7 +61,7 @@ describe("searchCrawler", function() {
 
       var result = searchCrawler.insertSite({name:testSiteName, url:testSiteUrl});
 
-      return Q.all([
+      return Promise.all([
          expect(result).to.eventually.have.property("_id"),
          expect(result).to.eventually.have.property("name", testSiteName),
          expect(result).to.eventually.have.property("url", testSiteUrl),
@@ -78,7 +76,7 @@ describe("searchCrawler", function() {
         return searchCrawler.getSites();
       });
 
-      return Q.all([
+      return Promise.all([
          expect(sites).to.eventually.have.property("length", previousSites.length+1),
          expect(sites).to.eventually.satisfy(containsTestSite)
         ]);
@@ -92,7 +90,7 @@ describe("searchCrawler", function() {
         return searchCrawler.getSite(testSiteName);
       });
 
-      return Q.all([
+      return Promise.all([
          expect(site).to.eventually.have.property("_id"),
          expect(site).to.eventually.have.property("name", testSiteName),
          expect(site).to.eventually.have.property("url", testSiteUrl),
@@ -111,7 +109,7 @@ describe("searchCrawler", function() {
         return searchCrawler.getSite(testSiteName);
       });
 
-      return Q.all([
+      return Promise.all([
          expect(site).to.eventually.not.have.property("invalidField"),
         ]);
     });
@@ -131,7 +129,7 @@ describe("searchCrawler", function() {
         url:testSiteUrl,
       });
 
-      return Q.all([
+      return Promise.all([
          expect(result).to.eventually.be.rejected,
         ]);
     });
@@ -142,7 +140,7 @@ describe("searchCrawler", function() {
         name:testSiteName,
       });
 
-      return Q.all([
+      return Promise.all([
          expect(result).to.eventually.be.rejected,
         ]);
     });
@@ -159,7 +157,7 @@ describe("searchCrawler", function() {
 
       var result = searchCrawler.removeSite(testSiteName);
 
-      return Q.all([
+      return Promise.all([
          expect(result).to.eventually.have.property("_id"),
          expect(result).to.eventually.have.property("name", testSiteName),
         ]);
@@ -173,7 +171,7 @@ describe("searchCrawler", function() {
         return searchCrawler.getSites();
       });
 
-      return Q.all([
+      return Promise.all([
          expect(sites).to.eventually.have.property("length", previousSites.length),
          expect(sites).to.eventually.satisfy(notContainsTestSite)
         ]);
@@ -187,7 +185,7 @@ describe("searchCrawler", function() {
         return searchCrawler.getSite(testSiteName);
       });
 
-      return Q.all([
+      return Promise.all([
          expect(site).to.eventually.be.rejected,
         ]);
     });
@@ -204,7 +202,7 @@ describe("searchCrawler", function() {
 
       var result = searchCrawler.registerPage(testSiteName, "http://nodejs.org/");
 
-      return Q.all([
+      return Promise.all([
          expect(result).to.eventually.have.property("_id"),
          expect(result).to.eventually.have.property("url", "http://nodejs.org/"),
          expect(result).to.eventually.have.property("title", "Node.js"),
@@ -219,7 +217,7 @@ describe("searchCrawler", function() {
         return searchCrawler.sitePageCount(testSiteName);
       });
 
-      return Q.all([
+      return Promise.all([
          expect(pageCount).to.eventually.equal(1)
         ]);
     });
@@ -247,7 +245,7 @@ describe("searchCrawler", function() {
         return r[0];
       });
 
-      return Q.all([
+      return Promise.all([
          expect(item).to.eventually.have.property("url", "http://nodejs.org/"),
          expect(item).to.eventually.have.property("title", "Node.js"),
         ]);
@@ -257,7 +255,7 @@ describe("searchCrawler", function() {
 
       var result = searchCrawler.searchPages(testSiteName, "invalidExpression", 1);
 
-      return Q.all([
+      return Promise.all([
          expect(result).to.eventually.have.property("length", 0),
         ]);
     });
@@ -292,7 +290,7 @@ describe("searchCrawler", function() {
         })[0];
       });
 
-      return Q.all([
+      return Promise.all([
         expect(result).to.eventually.have.length.above(0),
         expect(item).to.eventually.exist,
         expect(item).to.eventually.have.property("cronExpression", "1 1 1 1 1 1"),
@@ -303,7 +301,7 @@ describe("searchCrawler", function() {
 
       var result = searchCrawler.unloadJobs();
 
-      return Q.all([
+      return Promise.all([
           expect(result).to.eventually.have.property("length", 0),
         ]);
     });

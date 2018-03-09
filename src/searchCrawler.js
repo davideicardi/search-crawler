@@ -1,7 +1,6 @@
 "use strict";
 
-var mongoose = require('mongoose-promised');
-var Q = require('q');
+var mongoose = require('mongoose');
 
 var crawler = require("./crawler.js");
 var parser = require("./parser.js");
@@ -16,7 +15,7 @@ var config = require("./config.js");
 function init() {
 	console.log("Connecting to mongo database...");
 
-	return mongoose.connectQ(config.db.mongo.url)
+	return mongoose.connect(config.db.mongo.url)
 		.then(function() {
 			console.log("Mongo database connected.");
 		})
@@ -131,7 +130,7 @@ function crawlSite(siteName) {
 						page.url = url;
 
 						insertPage(siteName, page)
-						.fail(function(error){
+						.catch(function(error){
 							console.warn("Error inserting page " + error);
 						});
 					},
@@ -210,13 +209,13 @@ function unloadJobs() {
 				job.job.stop();
 			});
 
-			siteJobs = Q([]);
+			siteJobs = Promise.resolve([]);
 
 			return getJobs();
 		});
 	}
 	else {
-		return Q([]);
+		return Promise.resolve([]);
 	}
 }
 

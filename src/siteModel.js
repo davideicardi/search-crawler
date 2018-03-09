@@ -1,6 +1,6 @@
 "use strict";
 
-var mongoose = require('mongoose-promised');
+var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var PageModel = require("./pageModel.js");
@@ -27,14 +27,14 @@ siteSchema.methods.appCountPages = function () {
 
   return PageModel
   	.where({siteId : siteId})
-  	.countQ();
+  	.count();
 };
 siteSchema.methods.appDeletePages = function () {
 	var siteId = this._id.toString();
   return PageModel
   	.where({siteId : siteId})
-  	.removeQ()
-  	.spread(function (numberAffected, result){
+  	.remove()
+  	.then(function ([numberAffected, result]){
 			return numberAffected;
 		});
 };
@@ -42,7 +42,7 @@ siteSchema.methods.appGetPages = function () {
 	var siteId = this._id.toString();
   return PageModel
   	.where({siteId : siteId})
-  	.findQ();
+  	.find();
 };
 siteSchema.methods.appSearchPages = function (expression, limit) {
 	if (!limit || limit < 0 || limit > 100 || isNaN(limit)) {
@@ -65,14 +65,14 @@ siteSchema.methods.appSearchPages = function (expression, limit) {
   	.sort(sort)
   	.limit(limit)
   	.select(projection)
-  	.findQ();
+  	.find();
 };
 siteSchema.methods.appDeletePage = function (pageUrl) {
 	var siteId = this._id.toString();
   return PageModel
   	.where({siteId : siteId, url: pageUrl})
-  	.removeQ()
-  	.spread(function (numberAffected, result){
+  	.remove()
+  	.then(function ([numberAffected, result]){
 			return numberAffected;
 		});
 };
@@ -84,8 +84,8 @@ siteSchema.methods.appInsertPage = function (page) {
 	page.keywords.push("*");
 
 	var pm = new PageModel(page);
-	return pm.saveQ()
-		.spread(function (result, numberAffected){
+	return pm.save()
+		.then(function ([result, numberAffected]){
 			return result;
 		});
 };
@@ -93,12 +93,12 @@ siteSchema.methods.appDelete = function () {
 	var site = this;
   return site.appDeletePages()
     .then(function(){
-	    return site.removeQ();
+	    return site.remove();
     });
 };
 siteSchema.methods.appUpdate = function () {
-	return this.saveQ()
-			.spread(function (result, numberAffected){
+	return this.save()
+			.then(function ([result, numberAffected]){
 				return result;
 			});
 };
@@ -114,7 +114,7 @@ SiteModel.appGet = function(name){
 
 	return SiteModel
 		.where({name : name})
-		.findOneQ()
+		.findOne()
 		.then(function(site){
 				if (!site) {
 						throw new Error("Site '" + name + "' not found");
@@ -124,7 +124,7 @@ SiteModel.appGet = function(name){
 		});
 };
 SiteModel.appFindAll = function(){
-	return SiteModel.where().findQ();
+	return SiteModel.where().find();
 };
 SiteModel.appInsert = function(site){
 	if (!site.config){
@@ -139,8 +139,8 @@ SiteModel.appInsert = function(site){
 	}
 
 	var sm = new SiteModel(site);
-	return sm.saveQ()
-		.spread(function (result, numberAffected){
+	return sm.save()
+		.then(function ([result, numberAffected]){
 			return result;
 		});
 };
