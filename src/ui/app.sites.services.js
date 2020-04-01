@@ -9,7 +9,7 @@ myAppSites.factory('SiteApi', ['$resource',
 			 { },
 			 {
 				 registerPage: { method:'POST', url:'/api/sites/:siteName/register-page' },
-				 removePages: { method:'POST', url:'/api/sites/:siteName/remove-pages' },
+				 removePages: { method:'DELETE', url:'/api/sites/:siteName/remove-pages' },
 				 updateConfig: { method:'POST', url:'/api/sites/:siteName/update-config' },
 				 crawl: { method:'POST', url:'/api/sites/:siteName/crawl' },
 				 search: { method:'GET', url:'/api/sites/:siteName/search', isArray:true },

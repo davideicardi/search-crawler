@@ -35,7 +35,8 @@
     "mongod-cloud9": "mongod --bind_ip=$IP --dbpath=data --nojournal",
     "server": "nodemon ./index.js",
     "server-debug": "node-debug ./index.js",
-    "test-e2e": "mocha ./test/e2e/"
+    "test-e2e": "mocha ./test/e2e/",
+    "start": "node ./index.js"
   },
   "engines": {
     "node": ">=8.9.0"
